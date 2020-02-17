@@ -4,85 +4,108 @@ import java.util.Scanner;
 
 public class Menu {
     Scanner input = new Scanner(System.in);
+    Booking booking = new Booking();
 
     public Menu(){
         mainMenu();
     }
 
     private void mainMenu(){
-        System.out.println("********** MAIN MENU **********" + "\n" +
-                "[1] Book a room" + "\n" +
-                "[2] Search booking" + "\n" + // Change, find booking, delete booking
-                "[3] Logout" + "\n");
+        boolean running = true;
+        String choice = "";
 
-        String choice = "1";
+        System.out.println("********** ADMIN MENU **********" + "\n" +
+                "[1] Bookings (Add/Search/Delete)" + "\n" +
+                "[2] Rooms (Add/Search/Delete)" + "\n" + // Change, find booking, delete booking
+                "[3] Destinations (Add/Search/Delete)" + "\n" +
+                "\n" +
+                "[0] Logout");
 
-        switch (choice){
-            case "1":
-                System.out.println("Book room");
-                break;
+        try{
+            choice = input.nextLine();
 
-            case "2":
-                System.out.println("Search booking");
-                break;
+            while(running){
+                switch (choice){
+                    case "1":
+                        System.out.println("Bookings");
+                        break;
 
-            case "3":
-                System.exit(0);
-                break;
+                    case "2":
+                        System.out.println("Rooms");
+                        break;
 
+                    case "3":
+                        System.out.println("Destinations");
+                        break;
+
+                    case "0":
+                        System.exit(0);
+                        break;
+
+                    default:
+                        break;
+
+                }
+            }
+
+        }
+        catch(Exception e){
+            System.out.println(e.getMessage());
         }
     }
 
-    private void bookARoom(){
+    private void bookingMenu(){
+        boolean running = true;
 
-        // destination
-        // dates
-        // number of guests
-        // additional choices
-        // prices
+        String choice = "";
 
         System.out.println("********** BOOKING MENU **********" + "\n" +
-                "Please select a destination: " + "\n" +
-                "[1] Svalbard" + "\n" +
-                "[2] Oslo" + "\n" +
-                "[3] Stavanger" + "\n" +
-                "[4] Bergen" + "\n" +
-                "[5] Trondheim" + "\n" +
-                "[0] Back to main menu" + "\n");
-        String destination = input.nextLine();
+                "[1] Add booking " + "\n" +
+                "[2] Search booking " + "\n" + // Change, find booking, delete booking
+                "[3] Delete booking " + "\n" +
+                "\n" +
+                "[0] Back to admin menu");
 
-        System.out.println("Please select arrival date. Format should be YYYY/MM/DD. ");
-        String checkInDate = input.nextLine();
 
-        System.out.println("Please select departure date. Format should be YYYY/MM/DD. ");
-        String checkOutDate = input.nextLine();
+        try{
 
-        System.out.println("Please select number of guests");
-        int numberOfGuests = input.nextInt();
+            while(running){
+                choice = input.nextLine();
 
-        System.out.println("Proceed with booking? [Y] / [N}");
+                switch (choice){
 
-        String choice = "1";
+                    case "1":
+                        booking.bookRoom();
+                        break;
 
-        switch (choice){
-            case "1":
-                System.out.println("SELECT ALL HOTELS ETC");
-                break;
+                    case "2":
+                        System.out.println("Search booking");
+                        break;
 
-            case "2":
+                    case "3":
+                        System.out.println("Delete booking");
+                        break;
 
-                break;
+                    case "0":
+                        running = false;
+                        break;
 
-            case "0":
-                System.out.println("Back to main menu! ");
-                System.exit(0);
-                break;
+                    default:
+                        System.out.println("You can only make one of the choices listed in the menu choice. ");
+                        break;
+                }
+
+            }
 
         }
 
+        catch(Exception e){
+            System.out.println("Sorry something went wrong. " + e.getMessage());
+        }
+
+
+
     }
 
-    private void proceedBooking(){
 
-    }
 }
