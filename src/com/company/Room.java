@@ -12,7 +12,7 @@ public class Room {
     }
 
     public void addNewRoom() {
-        //database.allRooms();
+
 
         try{
             System.out.println("Enter the destination ID: ");
@@ -34,6 +34,6 @@ public class Room {
         } catch (Exception e){
             System.out.println("Oh no something went wrong. Please try again.  " + e.getMessage());
         }
-
     }
+
 }

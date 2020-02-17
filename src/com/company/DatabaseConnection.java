@@ -74,7 +74,7 @@ public class DatabaseConnection {
 
     }
 
-    public void allRooms() {
+    public void allDestinationsInDatabase() {
         try {
             statement = connection.prepareStatement("SELECT id, city, hotel_name, number_of_rooms FROM destinations ");
             resultSet = statement.executeQuery();
@@ -86,14 +86,11 @@ public class DatabaseConnection {
                         "NUMBER OF ROOMS: " + resultSet.getInt("number_of_rooms") + "\n" +
                         "*************************" + "\n";
                 System.out.println(roomInformation);
-
             }
 
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-
-
     }
 
 }
