@@ -3,8 +3,9 @@ package com.company;
 import java.util.Scanner;
 
 public class Menu {
-    Scanner input = new Scanner(System.in);
-    Booking booking = new Booking();
+    private Scanner input = new Scanner(System.in);
+    private Booking booking = new Booking();
+    private Destination destination = new Destination();
 
     public Menu(){
         mainMenu();
@@ -13,6 +14,7 @@ public class Menu {
     private void mainMenu(){
         boolean running = true;
         String choice = "";
+        while(running){
 
         System.out.println("********** ADMIN MENU **********" + "\n" +
                 "[1] Bookings (Add/Search/Delete)" + "\n" +
@@ -21,10 +23,14 @@ public class Menu {
                 "\n" +
                 "[0] Logout");
 
+
         try{
             choice = input.nextLine();
 
-            while(running){
+
+
+
+
                 switch (choice){
                     case "1":
                         System.out.println("Bookings");
@@ -36,6 +42,7 @@ public class Menu {
 
                     case "3":
                         System.out.println("Destinations");
+                        destination.addNewDestination();
                         break;
 
                     case "0":
@@ -48,9 +55,10 @@ public class Menu {
                 }
             }
 
-        }
+
         catch(Exception e){
             System.out.println(e.getMessage());
+        }
         }
     }
 
