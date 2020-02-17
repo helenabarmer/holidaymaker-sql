@@ -1,24 +1,39 @@
 package com.company;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Scanner;
 
 public class Room {
     private Scanner input = new Scanner(System.in);
+    private DatabaseConnection database = new DatabaseConnection();
 
     public Room(){
 
     }
 
-    public void addNewRoom(){
-        // SELECT NO OF ROOMS FROM DATABASE IN THE LOCATION
-        System.out.println("How many single rooms are there in the hotel? ");
-        String singleRoom = input.nextLine();
+    public void addNewRoom() {
+        //database.allRooms();
 
-        System.out.println("How many double rooms are there in the hotel? ");
-        String doubleRoom = input.nextLine();
+        try{
+            System.out.println("Enter the destination ID: ");
+            int destinationID = input.nextInt();
+            input.nextLine();
 
-        System.out.println("How many suites are there in the hotel? ");
-        String suite = input.nextLine();
+            System.out.println("Add room type (single/double/suite): ");
+            String roomType = input.nextLine();
+            //input.nextLine(); // To avoid skipping next line
+
+            System.out.println("Add price: ");
+            int price = input.nextInt();
+
+            System.out.println("Add maximum number of guests: ");
+            int maxGuests = input.nextInt();
+
+            database.addRoomToDatabase(destinationID, roomType, price, true, maxGuests);
+
+        } catch (Exception e){
+            System.out.println("Oh no something went wrong. Please try again.  " + e.getMessage());
+        }
 
     }
 }

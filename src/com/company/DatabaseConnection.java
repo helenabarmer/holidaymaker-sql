@@ -1,4 +1,6 @@
 package com.company;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
+
 import java.sql.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -24,7 +26,7 @@ public class DatabaseConnection {
         }
     }
 
-    public void addDestination(String city, String hotelName, boolean restaurant, boolean kidsClub,
+    public void addDestinationToDatabase(String city, String hotelName, boolean restaurant, boolean kidsClub,
                                boolean pool, boolean entertainment, String rating, String distanceCity,
                                String distanceBeach, int numberOfRooms){
 
@@ -43,11 +45,55 @@ public class DatabaseConnection {
             statement.setInt(10, numberOfRooms);
             statement.executeUpdate();
 
-        } catch (Exception ex) { ex.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
-    public void addBookingToDatabase(){
+    public void addRoomToDatabase(int destination_id, String room_type, int price, boolean availability, int maximum_guests) {
+
+        try {
+            statement = connection.prepareStatement("INSERT INTO rooms (destination_id, room_type, price, availability, maximum_guests) VALUES (?, ?, ?, ?, ?)");
+            statement.setInt(1, destination_id);
+            statement.setString(2, room_type);
+            statement.setInt(3, price);
+            statement.setBoolean(4, availability);
+            statement.setInt(5, maximum_guests);
+            try{
+                statement.executeUpdate();
+            }
+            catch (SQLException e){
+                System.out.println("Error message: " + "\n" + e.getMessage() + "\n");
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
+
+    public void allRooms() {
+        try {
+            statement = connection.prepareStatement("SELECT id, city, hotel_name, number_of_rooms FROM destinations ");
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                String roomInformation =
+                        "ID: " + resultSet.getString("id") + "\n" +
+                        "CITY: " + resultSet.getString("city") + "\n" +
+                        "HOTEL NAME: " + resultSet.getString("hotel_name") + "\n" +
+                        "NUMBER OF ROOMS: " + resultSet.getInt("number_of_rooms") + "\n" +
+                        "*************************" + "\n";
+                System.out.println(roomInformation);
+
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+
+    }
+
 }

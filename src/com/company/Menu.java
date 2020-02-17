@@ -6,6 +6,7 @@ public class Menu {
     private Scanner input = new Scanner(System.in);
     private Booking booking = new Booking();
     private Destination destination = new Destination();
+    private Room room = new Room();
 
     public Menu(){
         mainMenu();
@@ -38,6 +39,7 @@ public class Menu {
 
                     case "2":
                         System.out.println("Rooms");
+                        room.addNewRoom();
                         break;
 
                     case "3":

@@ -53,10 +53,8 @@ public class Destination {
             int numberOfRooms = input.nextInt();
 
             // Add to database
-            database.addDestination(city, hotelName, restaurant, kidsClub,
+            database.addDestinationToDatabase(city, hotelName, restaurant, kidsClub,
                     pool, entertainment, rating, distanceCity,
                     distanceBeach, numberOfRooms);
-
-
     }
 }
