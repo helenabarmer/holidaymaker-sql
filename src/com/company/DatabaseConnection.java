@@ -71,7 +71,6 @@ public class DatabaseConnection {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     public void allDestinationsInDatabase() {
@@ -91,6 +90,80 @@ public class DatabaseConnection {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+
+    public void filterRoomsInDatabase(int maximum_guests, boolean restaurant, boolean kids_club, boolean pool, boolean entertainment, boolean availability) {
+//SELECT destinations.city, destinations.hotel_name, rooms.room_type, rooms.price FROM rooms, destinations
+//WHERE rooms.maximum_guests = ? AND destinations.restaurant = ? AND destinations.kids_club = ?
+//AND destinations.pool = ? AND destinations.entertainment = ? AND rooms.availability = 1;
+
+        try {
+            statement = connection.prepareStatement("SELECT rooms.id, destinations.city, destinations.hotel_name, rooms.room_type, rooms.price " +
+                    "FROM rooms, destinations WHERE rooms.maximum_guests = ? AND destinations.restaurant = ? " +
+                    "AND destinations.kids_club = ? AND destinations.pool = ? AND destinations.entertainment = ? AND rooms.availability = ? GROUP BY city;");
+
+            statement.setInt(1, maximum_guests);
+            statement.setBoolean(2, restaurant);
+            statement.setBoolean(3, kids_club);
+            statement.setBoolean(4, pool);
+            statement.setBoolean(5, entertainment);
+            statement.setBoolean(6, availability);
+
+            try{
+                resultSet = statement.executeQuery();
+            }
+            catch (SQLException e){
+                System.out.println("Error message: " + "\n" + e.getMessage() + "\n");
+            }
+
+            if (resultSet.next()) {
+                String filterRooms =
+                        "ID: " + resultSet.getString("rooms.id") + "\n" +
+                        "CITY: " + resultSet.getString("city") + "\n" +
+                                "HOTEL NAME: " + resultSet.getString("hotel_name") + "\n" +
+                                "ROOM TYPE: " + resultSet.getString("room_type") + "\n" +
+                                "PRICE: " + resultSet.getInt("price") + "\n" +
+                                "*************************" + "\n";
+                System.out.println(filterRooms);
+            }
+            else{
+                System.out.println("No rooms found. Please try with different choices.  " + "\n");
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
+
+// Keeping for test later
+    public void filterLater(int numberOfGuests, boolean restaurant, boolean kidsClub, boolean pool, boolean entertainment, boolean availability) {
+//SELECT destinations.city, destinations.hotel_name, rooms.room_type, rooms.price FROM rooms, destinations
+//WHERE rooms.maximum_guests = ? AND destinations.restaurant = ? AND destinations.kids_club = ?
+//AND destinations.pool = ? AND destinations.entertainment = ? AND rooms.availability = 1;
+
+        try {
+            statement = connection.prepareStatement("SELECT destinations.city, destinations.hotel_name, rooms.room_type, rooms.price " +
+                    "FROM rooms, destinations WHERE rooms.maximum_guests = ? OR destinations.restaurant = ? " +
+                    "OR destinations.kids_club = ? OR destinations.pool = ? OR destinations.entertainment = ? AND rooms.availability = 1; ");
+            resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                String filterRooms =
+                        "CITY: " + resultSet.getString("city") + "\n" +
+                                "HOTEL NAME: " + resultSet.getString("hotel_name") + "\n" +
+                                "ROOM TYPE: " + resultSet.getString("room_type") + "\n" +
+                                "PRICE: " + resultSet.getInt("price") + "\n" +
+                                "*************************" + "\n";
+                System.out.println(filterRooms);
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
     }
 
 }

@@ -32,6 +32,7 @@ public class Menu {
                 switch (choice){
                     case "1":
                         System.out.println("Bookings");
+                        bookingMenu();
                         break;
 
                     case "2":
@@ -61,26 +62,27 @@ public class Menu {
         }
     }
 
-    private void bookingMenu(){
+    private void bookingMenu() {
         boolean running = true;
 
         String choice = "";
 
-        System.out.println("********** BOOKING MENU **********" + "\n" +
-                "[1] Add booking " + "\n" +
-                "[2] Search booking " + "\n" + // Change, find booking, delete booking
-                "[3] Delete booking " + "\n" +
-                "[4] All destinations " + "\n" +
-                "\n" +
-                "[0] Back to admin menu");
+        while (running) {
+            System.out.println("********** BOOKING MENU **********" + "\n" +
+                    "[1] Add booking " + "\n" +
+                    "[2] Search booking " + "\n" + // Change, find booking, delete booking
+                    "[3] Delete booking " + "\n" +
+                    "[4] All destinations " + "\n" +
+                    "\n" +
+                    "[0] Back to admin menu");
 
 
-        try{
+            try {
 
-            while(running){
+
                 choice = input.nextLine();
 
-                switch (choice){
+                switch (choice) {
 
                     case "1":
                         booking.bookRoom();
@@ -88,6 +90,7 @@ public class Menu {
 
                     case "2":
                         System.out.println("Search booking");
+                        booking.filterAndBook();
                         break;
 
                     case "3":
@@ -106,11 +109,9 @@ public class Menu {
                         System.out.println("You can only make one of the choices listed in the menu choice. ");
                         break;
                 }
+            } catch (Exception e) {
+                System.out.println("Sorry something went wrong. " + e.getMessage());
             }
-        }
-
-        catch(Exception e){
-            System.out.println("Sorry something went wrong. " + e.getMessage());
         }
     }
 

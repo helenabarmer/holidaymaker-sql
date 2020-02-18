@@ -4,9 +4,42 @@ import java.util.Scanner;
 
 public class Booking {
     private Scanner input = new Scanner(System.in);
+    private DatabaseConnection database = new DatabaseConnection();
 
 
     public Booking(){
+
+    }
+
+    public void filterAndBook(){
+
+        System.out.println("Number of guests: ");
+        int numberOfGuests = input.nextInt();
+
+        System.out.println("*** Additional choices ***");
+
+        System.out.println("Restaurant [true]/[false]: ");
+        boolean restaurant = input.nextBoolean();
+
+        System.out.println("Kids club [true]/[false]: ");
+        boolean kidsClub = input.nextBoolean();
+
+        System.out.println("Pool [true]/[false]: ");
+        boolean pool = input.nextBoolean();
+
+        System.out.println("Entertainment [true]/[false]: ");
+        boolean entertainment = input.nextBoolean();
+        System.out.println("*************************" + "\n");
+
+        database.filterRoomsInDatabase(numberOfGuests, restaurant, kidsClub, pool, entertainment, true);
+
+
+        //AND destinations.restaurant = ? AND destinations.kids_club = ?
+        ////AND destinations.pool = ? AND destinations.entertainment = ? AND rooms.availability = 1;
+
+        // VG questions
+        //System.out.println("Maximum distance to the beach: "); // Should be converted to int??
+        //System.out.println("Maximum distance to the city centre: "); // Should be converted to int??
 
     }
 
