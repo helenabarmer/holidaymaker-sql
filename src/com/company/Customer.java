@@ -23,6 +23,11 @@ public class Customer {
         database.addCustomerToDatabase(firstName, lastName, email, phoneNumber);
         System.out.println( "\n" + "New customer added: ");
         database.searchCustomerAndPrint(firstName, lastName);
+        System.out.println("Would you like to continue your booking? [Y]/[N]");
+        String continueBooking = input.nextLine();
+        if(continueBooking.equals("Y") || continueBooking.equals("y")){
+
+        }
 
     }
 }
