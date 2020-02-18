@@ -33,6 +33,15 @@ public class Booking {
 
         database.filterRoomsInDatabase(numberOfGuests, restaurant, kidsClub, pool, entertainment, true);
 
+        System.out.println("Would you like to book this room? [Y]/[N] ");
+        String bookRoom = input.nextLine();
+
+        if(bookRoom.equals("Y") || bookRoom.equals("y")){
+            System.out.println("Please enter the ID of the room you would like to book: ");
+            int roomID = input.nextInt();
+        }
+
+
 
         //AND destinations.restaurant = ? AND destinations.kids_club = ?
         ////AND destinations.pool = ? AND destinations.entertainment = ? AND rooms.availability = 1;

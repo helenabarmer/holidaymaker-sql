@@ -7,6 +7,7 @@ public class Menu {
     private Booking booking = new Booking();
     private Destination destination = new Destination();
     private Room room = new Room();
+    private Customer customer = new Customer();
     private DatabaseConnection database = new DatabaseConnection();
 
     public Menu(){
@@ -73,6 +74,7 @@ public class Menu {
                     "[2] Search booking " + "\n" + // Change, find booking, delete booking
                     "[3] Delete booking " + "\n" +
                     "[4] All destinations " + "\n" +
+                    "[5] Add new customer " + "\n" +
                     "\n" +
                     "[0] Back to admin menu");
 
@@ -101,6 +103,11 @@ public class Menu {
                         database.allDestinationsInDatabase();
                         break;
 
+                    case "5":
+                        System.out.println("Add new customer");
+                        customer.registerNewCustomer();
+                        break;
+
                     case "0":
                         running = false;
                         break;
@@ -120,6 +127,7 @@ public class Menu {
 
         String choice = "";
 
+        while(running){
         System.out.println("********** ROOM MENU **********" + "\n" +
                 "[1] Add new room " + "\n" +
                 "[2] See all added rooms " + "\n" + // Change, find booking, delete booking
@@ -130,7 +138,6 @@ public class Menu {
 
         try{
 
-            while(running){
                 choice = input.nextLine();
 
                 switch (choice){
@@ -140,6 +147,7 @@ public class Menu {
                         break;
 
                     case "2":
+                        System.out.println("All added rooms. ");
 
                         break;
 
@@ -155,11 +163,12 @@ public class Menu {
                         System.out.println("You can only make one of the choices listed in the menu choice. ");
                         break;
                 }
-            }
+
         }
 
         catch(Exception e){
             System.out.println("Sorry something went wrong. " + e.getMessage());
+        }
         }
 
     }
