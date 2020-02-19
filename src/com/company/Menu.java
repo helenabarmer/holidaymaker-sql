@@ -20,9 +20,10 @@ public class Menu {
         while(true){
 
         System.out.println("********** ADMIN MENU **********" + "\n" +
-                "[1] Bookings (Add/Search/Delete)" + "\n" +
-                "[2] Rooms (Add/Search/Delete)" + "\n" + // Change, find booking, delete booking
-                "[3] Destinations (Add/Search/Delete)" + "\n" +
+                "[1] Bookings " + "\n" +
+                "[2] Rooms " + "\n" + // Change, find booking, delete booking
+                "[3] Destinations " + "\n" +
+                "[4] TEST STUFF HERE" + "\n" +
                 "\n" +
                 "[0] Logout");
 
@@ -44,6 +45,12 @@ public class Menu {
                     case "3":
                         System.out.println("Destinations");
                         destination.addNewDestination();
+                        break;
+
+                    case "4":
+                        System.out.println("TEST");
+                        //booking.test_dates();
+                        database.printBookedDates();
                         break;
 
                     case "0":
@@ -70,7 +77,7 @@ public class Menu {
 
         while (running) {
             System.out.println("********** BOOKING MENU **********" + "\n" +
-                    "[1] Add booking " + "\n" +
+                    "[1] Add new booking " + "\n" +
                     "[2] Search booking " + "\n" + // Change, find booking, delete booking
                     "[3] Delete booking " + "\n" +
                     "[4] All destinations " + "\n" +
@@ -92,7 +99,7 @@ public class Menu {
 
                     case "2":
                         System.out.println("Search booking");
-                        booking.filterAndBook();
+                        //booking.filterAndBook();
                         break;
 
                     case "3":

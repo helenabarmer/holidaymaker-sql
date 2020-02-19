@@ -56,5 +56,6 @@ public class Destination {
             database.addDestinationToDatabase(city, hotelName, restaurant, kidsClub,
                     pool, entertainment, rating, distanceCity,
                     distanceBeach, numberOfRooms);
+
     }
 }
