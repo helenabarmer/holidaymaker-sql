@@ -29,7 +29,7 @@ public class Customer {
         if(continueBooking.equals("Y") || continueBooking.equals("y")){
             System.out.println("Please enter the customer ID: ");
             int customerID = input.nextInt();
-            booking.filterAndBook(customerID);
+            //booking.filterAndBook(customerID);
         }
     }
 }

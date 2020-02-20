@@ -77,7 +77,7 @@ public class Menu {
 
         while (running) {
             System.out.println("********** BOOKING MENU **********" + "\n" +
-                    "[1] Add new booking " + "\n" +
+                    "[1] Add booking " + "\n" +
                     "[2] Search booking " + "\n" + // Change, find booking, delete booking
                     "[3] Delete booking " + "\n" +
                     "[4] All destinations " + "\n" +

@@ -53,52 +53,6 @@ public class Booking {
                 break;
             }
         }
-
-
-
-
-    }
-
-    public void filterAndBook(int customerID){
-
-        System.out.println("Number of guests: ");
-        int numberOfGuests = input.nextInt();
-
-        System.out.println("*** Additional choices ***");
-
-        System.out.println("Restaurant [true]/[false]: ");
-        boolean restaurant = input.nextBoolean();
-
-        System.out.println("Kids club [true]/[false]: ");
-        boolean kidsClub = input.nextBoolean();
-
-        System.out.println("Pool [true]/[false]: ");
-        boolean pool = input.nextBoolean();
-
-        System.out.println("Entertainment [true]/[false]: ");
-        boolean entertainment = input.nextBoolean();
-        System.out.println("*************************" + "\n");
-
-        //database.filterRoomsInDatabase(numberOfGuests, restaurant, kidsClub, pool, entertainment, true);
-
-        System.out.println("Would you like to book one of these rooms? [Y]/[N] ");
-        String bookRoom = input.nextLine();
-
-        if(bookRoom.equals("Y") || bookRoom.equals("y")){
-            System.out.println("Please enter the room ID: ");
-            int roomID = input.nextInt();
-            input.nextLine();
-            System.out.println("Please enter check-in date: " );
-            String checkinDate = input.nextLine();
-            System.out.println("Please enter check-out date: ");
-            String checkoutDate = input.nextLine();
-            System.out.println("Please enter additional meal choices [half board]/[full board]/[NULL]");
-            String mealChoice = input.nextLine();
-            System.out.println("Additional bed required? [yes]/[no]");
-            String additionalBed = input.nextLine();
-
-        }
-
     }
 
 
@@ -143,31 +97,37 @@ public class Booking {
                 String choice = input.nextLine();
 
                 if(choice.equals("Y") || choice.equals("y")){
-                    System.out.println("Enter room ID: ");
+                    System.out.println("Please enter the room ID you would like to book: ");
+                    int roomID = input.nextInt();
+                    input.nextLine();
+
+                    // Booking step 1
+                    database.addBookingRoom(checkInDate, checkOutDate, numberOfGuests, roomID);
+
+                    // Adding additional choices
+                    System.out.println("Please enter additional meal choices [half board]/[full board]/[NULL]");
+                    String mealChoice = input.nextLine();
+
+                    System.out.println("Additional bed? [yes]/[no]");
+                    String additionalBed = input.nextLine();
+
+                    // Booking step 2, additional choices
+                    database.addAdditionalChoices(roomID, mealChoice, additionalBed);
+
+                    // Get price and proceed to payment
+
+                    // Register guest and finish booking
+
                 }
                 else{
                     return;
                 }
             }
             else{
-                break;
+                return;
             }
         }
-
-        // Proceed booking?
-        // Room ID
-
-        // Add meal to booking?
-        // Add additional bed to booking?
-        // Get price and proceed to payment
-
-
-
-
-
     }
 
-    private void proceedBooking(){
 
-    }
 }

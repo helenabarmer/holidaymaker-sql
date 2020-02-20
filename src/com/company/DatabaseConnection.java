@@ -144,8 +144,59 @@ public class DatabaseConnection {
             ex.printStackTrace();
         }
         return false;
-
     }
+
+    public void addBookingRoom(String checkin_date, String checkout_date, int total_guests, int room_id){
+        try {
+            statement = connection.prepareStatement("UPDATE rooms\n" +
+                    "JOIN guest_bookings\n" +
+                    "ON rooms.id = guest_bookings.room_id\n" +
+                    "SET checkin_date = ?, checkout_date = ?, total_guests = ?\n" +
+                    "WHERE room_id = ?;");
+            statement.setString(1, checkin_date);
+            statement.setString(2, checkout_date);
+            statement.setInt(3, total_guests);
+            statement.setInt(4, room_id);
+
+            System.out.println("Booking added. ");
+            try {
+                statement.executeUpdate();
+            } catch (SQLException e) {
+                System.out.println("Error message: " + "\n" + e.getMessage() + "\n");
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addAdditionalChoices(int room_id, String meal_choice, String additional_bed){
+        try {
+            statement = connection.prepareStatement("UPDATE additional_choices\n" +
+                    "JOIN rooms\n" +
+                    "ON rooms.id = additional_choices.room_id\n" +
+                    "SET meal_choice = ?, additional_bed = ?\n" +
+                    "WHERE rooms.id = ?;");
+            statement.setInt(1, room_id);
+            statement.setString(2, meal_choice);
+            statement.setString(3, additional_bed);
+
+
+            System.out.println("Additional choices added. ");
+            try {
+                statement.executeUpdate();
+            } catch (SQLException e) {
+                System.out.println("Error message: " + "\n" + e.getMessage() + "\n");
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     public void addCustomerToDatabase(String first_name, String last_name, String email, String phonenumber) {
 
