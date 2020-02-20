@@ -12,7 +12,6 @@ public class Room {
     }
 
     public void addNewRoom() {
-
         try{
             System.out.println("Enter the destination ID: ");
             int destinationID = input.nextInt();
@@ -28,7 +27,7 @@ public class Room {
             System.out.println("Add maximum number of guests: ");
             int maxGuests = input.nextInt();
 
-            database.addRoomToDatabase(destinationID, roomType, price, true, maxGuests);
+            database.addRoomToDatabase(destinationID, roomType, price, maxGuests);
             System.out.println("New room is now added! ");
 
         } catch (Exception e){

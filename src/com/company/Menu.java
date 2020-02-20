@@ -19,11 +19,10 @@ public class Menu {
         String choice = "";
         while(true){
 
-        System.out.println("********** ADMIN MENU **********" + "\n" +
-                "[1] Bookings " + "\n" +
-                "[2] Rooms " + "\n" + // Change, find booking, delete booking
-                "[3] Destinations " + "\n" +
-                "[4] TEST STUFF HERE" + "\n" +
+        System.out.println("********** MAIN MENU **********" + "\n" +
+                "[1] Add booking " + "\n" +
+                "[2] Admin menu [Add room/destination] " + "\n" + // Change, find booking, delete booking
+                "[3] TEST STUFF HERE" + "\n" +
                 "\n" +
                 "[0] Logout");
 
@@ -33,21 +32,17 @@ public class Menu {
 
                 switch (choice){
                     case "1":
-                        System.out.println("Bookings");
+                        System.out.println("Booking");
                         bookingMenu();
                         break;
 
                     case "2":
-                        System.out.println("Rooms");
-                        roomMenu();
+                        System.out.println("Admin choices");
+                        adminMenu();
                         break;
 
+                        // Test purpose only
                     case "3":
-                        System.out.println("Destinations");
-                        destination.addNewDestination();
-                        break;
-
-                    case "4":
                         System.out.println("TEST");
                         //booking.test_dates();
                         database.printBookedDates();
@@ -77,11 +72,16 @@ public class Menu {
 
         while (running) {
             System.out.println("********** BOOKING MENU **********" + "\n" +
-                    "[1] Add booking " + "\n" +
-                    "[2] Search booking " + "\n" + // Change, find booking, delete booking
+                    "[1] Search destinations and book " + "\n" +
+
+
+                    "[2] Change booking " + "\n" + // Change, find booking, delete booking
                     "[3] Delete booking " + "\n" +
+
+
+
                     "[4] All destinations " + "\n" +
-                    "[5] Add new customer " + "\n" +
+                    "[5] Search customers " + "\n" +
                     "\n" +
                     "[0] Back to admin menu");
 
@@ -107,12 +107,13 @@ public class Menu {
                         break;
 
                     case "4":
+                        System.out.println("All destinations");
                         database.allDestinationsInDatabase();
                         break;
 
                     case "5":
-                        System.out.println("Add new customer");
-                        customer.registerNewCustomer();
+                        System.out.println("Search customers");
+                        //customer.registerNewCustomer();
                         break;
 
                     case "0":
@@ -129,16 +130,15 @@ public class Menu {
         }
     }
 
-    private void roomMenu(){
+    private void adminMenu(){
         boolean running = true;
 
         String choice = "";
 
         while(running){
         System.out.println("********** ROOM MENU **********" + "\n" +
-                "[1] Add new room " + "\n" +
-                "[2] See all added rooms " + "\n" + // Change, find booking, delete booking
-                "[3] Delete room " + "\n" +
+                "[1] Add new destination " + "\n" +
+                "[2] Add new room to destination " + "\n" + // Change, find booking, delete booking
                 "\n" +
                 "[0] Back to admin menu");
 
@@ -150,16 +150,12 @@ public class Menu {
                 switch (choice){
 
                     case "1":
-                        room.addNewRoom();
+                        System.out.println("Add destination");
                         break;
 
                     case "2":
-                        System.out.println("All added rooms. ");
-
-                        break;
-
-                    case "3":
-                        System.out.println("Delete room");
+                        System.out.println("Add new room. ");
+                        room.addNewRoom();
                         break;
 
                     case "0":

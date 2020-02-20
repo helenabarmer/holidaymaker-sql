@@ -11,7 +11,7 @@ public class Customer {
 
     }
 
-    public void registerNewCustomer(){
+    public void registerNewCustomer(int roomID){
         System.out.println("First name: ");
         String firstName = input.nextLine();
         System.out.println("Last name: ");
@@ -21,15 +21,12 @@ public class Customer {
         System.out.println("Phone number: ");
         String phoneNumber = input.nextLine();
 
-        database.addCustomerToDatabase(firstName, lastName, email, phoneNumber);
+        database.addCustomerToDatabase(roomID, firstName, lastName, email, phoneNumber);
         System.out.println( "\n" + "New customer added: ");
         database.searchCustomerAndPrint(firstName, lastName);
-        System.out.println("Would you like to continue the booking? [Y]/[N]");
-        String continueBooking = input.nextLine();
-        if(continueBooking.equals("Y") || continueBooking.equals("y")){
-            System.out.println("Please enter the customer ID: ");
-            int customerID = input.nextInt();
-            //booking.filterAndBook(customerID);
+
         }
+
+        // See all customers with ID
     }
-}
+

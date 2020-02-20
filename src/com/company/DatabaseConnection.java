@@ -51,14 +51,13 @@ public class DatabaseConnection {
 
     }
 
-    public void addRoomToDatabase(int destination_id, String room_type, int price_per_night, boolean availability, int maximum_guests) {
+    public void addRoomToDatabase(int destination_id, String room_type, int price_per_night, int maximum_guests) {
         try {
-            statement = connection.prepareStatement("INSERT INTO rooms (destination_id, room_type, price_per_night, availability, maximum_guests) VALUES (?, ?, ?, ?, ?)");
+            statement = connection.prepareStatement("INSERT INTO rooms (destination_id, room_type, price_per_night, maximum_guests) VALUES (?, ?, ?, ?)");
             statement.setInt(1, destination_id);
             statement.setString(2, room_type);
             statement.setInt(3, price_per_night);
-            statement.setBoolean(4, availability);
-            statement.setInt(5, maximum_guests);
+            statement.setInt(4, maximum_guests);
             try {
                 statement.executeUpdate();
             } catch (SQLException e) {
@@ -91,18 +90,20 @@ public class DatabaseConnection {
 
     public boolean filterRoomsInDatabase(String city, String checkin_date, String checkout_date, int maximum_guests, boolean restaurant, boolean kids_club, boolean pool, boolean entertainment) {
         try {
-            statement = connection.prepareStatement("SELECT rooms.id, city, hotel_name, rating, distance_centre, distance_beach, room_type, price_per_night, checkin_date, checkout_date \n" +
-                    "FROM destinations \n" +
+            statement = connection.prepareStatement("SELECT rooms.id, city, hotel_name, rating, distance_centre, distance_beach, room_type, price_per_night, booked_dates.checkin_date, \n" +
+                    "booked_dates.checkout_date \n" +
+                    "FROM destinations\n" +
                     "JOIN rooms\n" +
-                    "ON destinations.id = rooms.destination_id \n" +
-                    "WHERE city = ? \n" +
-                    "AND ? NOT BETWEEN checkin_date AND checkout_date \n" +
-                    "AND ? NOT BETWEEN checkin_date AND checkout_date \n" +
-                    "AND ? >= maximum_guests  \n" +
-                    "AND restaurant = ?\n" +
-                    "AND kids_club = ?\n" +
-                    "AND pool = ?\n" +
-                    "AND entertainment = ?;");
+                    "ON destinations.id = rooms.destination_id\n" +
+                    "JOIN booked_dates\n" +
+                    "ON rooms.id = booked_dates.room_id\n" +
+                    "WHERE city = ?\n" +
+                    "WHERE ? NOT BETWEEN booked_dates.checkin_date AND booked_dates.checkout_date\n" +
+                    "AND ? NOT BETWEEN booked_dates.checkin_date AND booked_dates.checkout_date\n" +
+                    "AND ? BETWEEN '2020-06-01' AND '2020-07-30'\n" +
+                    "AND ? BETWEEN '2020-06-02' AND '2020-07-31'\n" +
+                    "AND ?> ?\n" +
+                    "AND maximum_guests >=?;");
 
             statement.setString(1, city);
             statement.setString(2, checkin_date);
@@ -129,8 +130,8 @@ public class DatabaseConnection {
                                 "DISTANCE CENTRE: " + resultSet.getInt("distance_centre") + "\n" +
                                 "DISTANCE BEACH: " + resultSet.getInt("distance_beach") + "\n" +
                                 "RATING: " + resultSet.getString("rating") + "\n" +
-                                "BOOKED DATE CHECK-IN: " + resultSet.getString("checkin_date") + "\n" +
-                                "BOOKED DATE CHECKOUT: " + resultSet.getString("checkout_date") + "\n" +
+                                "BOOKED DATE CHECK-IN: " + resultSet.getString("booked_dates.checkin_date") + "\n" +
+                                "BOOKED DATE CHECKOUT: " + resultSet.getString("booked_dates.checkout_date") + "\n" +
                                 "*************************" + "\n";
 
                 System.out.println(filterRooms);
@@ -198,14 +199,18 @@ public class DatabaseConnection {
 
 
 
-    public void addCustomerToDatabase(String first_name, String last_name, String email, String phonenumber) {
+    public void addCustomerToDatabase(int room_id, String first_name, String last_name, String email, String phonenumber) {
 
         try {
-            statement = connection.prepareStatement("INSERT INTO guest_information (first_name, last_name, email, phonenumber) VALUES (?, ?, ?, ?)");
-            statement.setString(1, first_name);
-            statement.setString(2, last_name);
-            statement.setString(3, email);
-            statement.setString(4, phonenumber);
+            statement = connection.prepareStatement("INSERT INTO guest_information (room_id, first_name, last_name, email, phonenumber) VALUES (?, ?, ?, ?,?)");
+            statement.setInt(1, room_id);
+            statement.setString(2, first_name);
+            statement.setString(3, last_name);
+            statement.setString(4, email);
+            statement.setString(5, phonenumber);
+
+            /*System.out.println("New customer " + first_name + " " + last_name + " added. " + "\n" +
+                    "Customer ID: " + resultSet.getInt("room_id"));*/
             try {
                 statement.executeUpdate();
             } catch (SQLException e) {
