@@ -7,7 +7,6 @@ public class Menu {
     private Booking booking = new Booking();
     private Destination destination = new Destination();
     private Room room = new Room();
-    private Customer customer = new Customer();
     private DatabaseConnection database = new DatabaseConnection();
 
     public Menu(){
@@ -45,7 +44,8 @@ public class Menu {
                     case "3":
                         System.out.println("TEST");
                         //booking.test_dates();
-                        database.printBookedDates();
+                        //database.printBookedDates();
+                        database.getCustomerID("Cookie", "Monster");
                         break;
 
                     case "0":

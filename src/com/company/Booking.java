@@ -61,7 +61,7 @@ public class Booking {
         while(true) {
             System.out.println("********** ROOM BOOKING MENU **********" + "\n" +
                     "Please enter a destination: " + "\n" +
-                    "[Svalbard] [Oslo] [Stavanger] [Bergen] [Trondheim]");
+                    "[Barentsburg] [Stavanger] [Trondheim] [Mo I Rana] [Longyearbyen]");
             String city = input.nextLine();
 
             System.out.println("Please enter check-in date. Format should be YYYY/MM/DD. ");
@@ -91,7 +91,7 @@ public class Booking {
             input.nextLine();
             System.out.println("*************************" + "\n");
 
-            // Tested and working! 2020-02-20
+
             if(database.filterRoomsInDatabase(city, checkInDate, checkOutDate, numberOfGuests, restaurant, kidsClub, pool, entertainment)){
                 System.out.println("Would you like to proceed the booking? [Y]/[N]");
                 String choice = input.nextLine();
@@ -102,7 +102,7 @@ public class Booking {
                     input.nextLine();
 
                     // Booking step 1
-                    database.addBookingRoom(checkInDate, checkOutDate, numberOfGuests, roomID);
+                    database.addBookingRoom(roomID, checkInDate, checkOutDate);
 
                     // Adding additional choices
                     System.out.println("Please enter additional meal choices [half board]/[full board]/[NULL]");
@@ -116,32 +116,37 @@ public class Booking {
 
                     // Get price and proceed to payment
 
-                    // Register guest and finish booking
-                    //customer.registerNewCustomer(roomID);
+                    // Register new guest and get guest ID
+                    int guestID = registerCustomer();
 
-                    System.out.println("First name: ");
-                    String firstName = input.nextLine();
-                    System.out.println("Last name: ");
-                    String lastName = input.nextLine();
-                    System.out.println("E-mail: ");
-                    String email = input.nextLine();
-                    System.out.println("Phone number: ");
-                    String phoneNumber = input.nextLine();
-
-                    database.addCustomerToDatabase(roomID, firstName, lastName, email, phoneNumber);
-                    System.out.println( "\n" + "New customer added: ");
-                    database.searchCustomerAndPrint(firstName, lastName);
-
-
+                    // Finish booking
+                    database.finishBooking(guestID, roomID,numberOfGuests);
+                    break;
                 }
                 else{
                     return;
                 }
             }
             else{
+                System.out.println("Something went wrong. Please try again. ");
                 return;
             }
         }
+    }
+
+    private int registerCustomer(){
+        System.out.println("First name: ");
+        String firstName = input.nextLine();
+        System.out.println("Last name: ");
+        String lastName = input.nextLine();
+        System.out.println("E-mail: ");
+        String email = input.nextLine();
+        System.out.println("Phone number: ");
+        String phoneNumber = input.nextLine();
+
+        database.addCustomerToDatabase(firstName, lastName, email, phoneNumber);
+        String guestID = database.getCustomerID(firstName, lastName);
+        return Integer.parseInt(guestID);
     }
 
 
