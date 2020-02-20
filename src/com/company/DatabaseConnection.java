@@ -308,7 +308,17 @@ public class DatabaseConnection {
 
     public boolean searchCustomerAndPrint(String first_name, String last_name) {
         try {
-            statement = connection.prepareStatement("SELECT id, first_name, last_name, email, phonenumber FROM guest_information WHERE first_name = ? AND last_name = ? ");
+            statement = connection.prepareStatement("SELECT guest_bookings.id, first_name, last_name, city, hotel_name, checkin_date, checkout_date FROM guest_bookings\n" +
+                    "JOIN guest_information\n" +
+                    "ON guest_information.id = guest_bookings.guests_id\n" +
+                    "JOIN booked_dates\n" +
+                    "ON booked_dates.booked_ID = guest_bookings.booked_dates_id\n" +
+                    "JOIN rooms\n" +
+                    "ON rooms.id = guest_bookings.id\n" +
+                    "JOIN destinations\n" +
+                    "ON destinations.id = rooms.destination_id\n" +
+                    "WHERE first_name = ?\n" +
+                    "AND last_name = ?;");
             statement.setString(1, first_name);
             statement.setString(2, last_name);
 
@@ -318,15 +328,16 @@ public class DatabaseConnection {
                 System.out.println("Error message: " + "\n" + e.getMessage() + "\n");
             }
 
-
             while (resultSet.next()) {
                 String roomInformation =
                         "*************************" + "\n" +
-                                "ID: " + resultSet.getString("id") + "\n" +
+                                "BOOKING ID: " + resultSet.getString("guest_bookings.id") + "\n" +
+                                "CITY: " + resultSet.getString("city") + "\n" +
+                                "HOTEL NAME: " + resultSet.getString("hotel_name") + "\n" +
                                 "FIRST NAME: " + resultSet.getString("first_name") + "\n" +
                                 "LAST NAME: " + resultSet.getString("last_name") + "\n" +
-                                "E-MAIL: " + resultSet.getString("email") + "\n" +
-                                "PHONE NUMBER: " + resultSet.getString("phonenumber") + "\n" +
+                                "CHECK-IN DATE: " + resultSet.getString("checkin_date") + "\n" +
+                                "CHECKOUT DATE: " + resultSet.getString("checkout_date") + "\n" +
                                 "*************************" + "\n";
                 System.out.println(roomInformation);
 

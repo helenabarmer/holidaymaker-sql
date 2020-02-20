@@ -95,6 +95,7 @@ public class Menu {
 
                     case "3":
                         System.out.println("Cancel booking");
+                        booking.cancelBooking();
                         break;
 
                     case "4":
