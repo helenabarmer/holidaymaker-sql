@@ -107,15 +107,21 @@ public class Booking {
         return Integer.parseInt(guestID);
     }
 
-    public void cancelBooking(int bookingID){
-        System.out.println("You will now cancel the booking with ID " + bookingID + "\n" +
-                "Proceed? [Y]/[N]");
-        String choice = input.nextLine();
+    public void cancelBooking(){
+        try{
+            System.out.println("Enter the booking ID to cancel the booking: ");
+            int bookingID = input.nextInt();
+            System.out.println("You will now cancel the booking with ID " + bookingID + "\n" +
+                    "Proceed? [Y]/[N]");
+            String choice = input.nextLine();
 
-        if(choice.equals("Y") || choice.equals("y")){
-
+            if(choice.equals("Y") || choice.equals("y")){
+                database.cancelBooking(bookingID);
+            }
         }
-
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 

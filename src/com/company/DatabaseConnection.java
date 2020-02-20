@@ -175,13 +175,13 @@ public class DatabaseConnection {
 
 
             // Step 2: Selecting and retrieving ID from INSERT query above
-            statement = connection.prepareStatement("SELECT id FROM booked_dates \n" +
+            statement = connection.prepareStatement("SELECT booked_ID FROM booked_dates \n" +
                     "WHERE room_id = ?\n" +
                     "AND checkin_date = ? " +
                     "AND checkout_date = ?; ");
             statement.setInt(1, room_id);
             statement.setString(2, checkin_date);
-            statement.setString(2, checkout_date);
+            statement.setString(3, checkout_date);
 
             try {
                 resultSet = statement.executeQuery();
@@ -189,7 +189,7 @@ public class DatabaseConnection {
                 System.out.println("Error message: " + "\n" + e.getMessage() + "\n");
             }
             while (resultSet.next()){
-                ID.append(resultSet.getString("id"));
+                ID.append(resultSet.getString("booked_ID"));
             }
 
         } catch (Exception e) {
@@ -213,7 +213,7 @@ public class DatabaseConnection {
             }
 
             // Step 2: Selecting and retrieving ID from INSERT query above
-            statement = connection.prepareStatement("SELECT id FROM additional_choices \n" +
+            statement = connection.prepareStatement("SELECT choice_ID FROM additional_choices \n" +
                     "WHERE meal_choice = ?\n" +
                     "AND additional_bed = ?; ");
             statement.setString(1, meal_choice);
@@ -225,7 +225,7 @@ public class DatabaseConnection {
                 System.out.println("Error message: " + "\n" + e.getMessage() + "\n");
             }
             while (resultSet.next()){
-                ID.append(resultSet.getString("id"));
+                ID.append(resultSet.getString("choice_ID"));
             }
 
         } catch (Exception e) {
@@ -288,12 +288,12 @@ public class DatabaseConnection {
 
     public void finishBooking(int guests_id, int room_id, int additional_choices_id, int booked_dates_id, int total_guests){
         try {
-            statement = connection.prepareStatement("INSERT INTO guest_bookings (guests_id, room_id, additional_choices_id, total_guests) VALUES (?, ?, ?, ?, ?);");
+            statement = connection.prepareStatement("INSERT INTO guest_bookings (guests_id, room_id, additional_choices_id, booked_dates_id, total_guests) VALUES (?, ?, ?, ?, ?);");
             statement.setInt(1, guests_id);
             statement.setInt(2, room_id);
             statement.setInt(3, additional_choices_id);
-            statement.setInt(3, booked_dates_id);
-            statement.setInt(4, total_guests);
+            statement.setInt(4, booked_dates_id);
+            statement.setInt(5, total_guests);
             try {
                 statement.executeUpdate();
             } catch (SQLException e) {
@@ -339,7 +339,26 @@ public class DatabaseConnection {
         return false;
     }
 
-    public void cancelBooking(){
+    public void cancelBooking(int id){
+        try {
+            statement = connection.prepareStatement("DELETE guest_bookings, additional_choices, booked_dates  FROM guest_bookings\n" +
+                    "INNER JOIN additional_choices\n" +
+                    "ON additional_choices.choice_ID = guest_bookings.additional_choices_id\n" +
+                    "INNER JOIN booked_dates\n" +
+                    "ON booked_dates.booked_ID = guest_bookings.booked_dates_id\n" +
+                    "WHERE guest_bookings.id = ?;\n");
+            statement.setInt(1, id);
+            System.out.println("Booking with ID " + id + " is now cancelled. ");
+
+            try {
+                statement.executeUpdate();
+            } catch (SQLException e) {
+                System.out.println("Error message: " + "\n" + e.getMessage() + "\n");
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
