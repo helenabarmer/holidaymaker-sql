@@ -74,7 +74,7 @@ public class Menu {
             System.out.println("********** BOOKING MENU **********" + "\n" +
                     "[1] Search destinations and book " + "\n" +
                     "[2] Change booking " + "\n" + // Not implemented
-                    "[3] Delete booking " + "\n" + // Not implemented
+                    "[3] Cancel booking " + "\n" + // Not implemented
                     "[4] See all destinations " + "\n" +
                     "[5] Search customer by name " + "\n" +
                     "\n" +
@@ -94,7 +94,7 @@ public class Menu {
                         break;
 
                     case "3":
-                        System.out.println("Delete booking");
+                        System.out.println("Cancel booking");
                         break;
 
                     case "4":
@@ -103,8 +103,7 @@ public class Menu {
                         break;
 
                     case "5":
-                        System.out.println("Search customers");
-                        //customer.registerNewCustomer();
+                        adminSearchCustomer();
                         break;
 
                     case "0":
@@ -162,5 +161,22 @@ public class Menu {
             System.out.println("Sorry something went wrong. " + e.getMessage());
         }
         }
+    }
+
+    private void adminSearchCustomer(){
+        try{
+            System.out.println("Search customer ID");
+            System.out.println("Enter first name: ");
+            String firstName = input.nextLine();
+            System.out.println("Enter last name: ");
+            String lastName = input.nextLine();
+            if (!database.searchCustomerAndPrint(firstName, lastName)) {
+                System.out.println("Sorry we could not find the name " +firstName+ " " +lastName);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 }
