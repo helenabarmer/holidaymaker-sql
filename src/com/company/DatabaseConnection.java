@@ -177,11 +177,7 @@ public class DatabaseConnection {
 
     public void addAdditionalChoices(int room_id, String meal_choice, String additional_bed){
         try {
-            statement = connection.prepareStatement("UPDATE additional_choices\n" +
-                    "JOIN rooms\n" +
-                    "ON rooms.id = additional_choices.room_id\n" +
-                    "SET meal_choice = ?, additional_bed = ?\n" +
-                    "WHERE rooms.id = ?;");
+            statement = connection.prepareStatement("INSERT INTO additional_choices(room_id, meal_choice, additional_bed) VALUES(?, ?, ?);");
             statement.setInt(1, room_id);
             statement.setString(2, meal_choice);
             statement.setString(3, additional_bed);
@@ -299,81 +295,7 @@ public class DatabaseConnection {
         }
     }
 
-    // TEST!
-    public void testInsertDates(int guests_id, String checkin_date, String checkout_date) {
-        try {
-            statement = connection.prepareStatement
-                    ("INSERT INTO view_guest_bookings(guest_bookings.guests_id, room_id, checkin_date, checkout_date, total_guests, availability) VALUES(?, 4, CASE WHEN ? BETWEEN '2020-06-01' AND '2020-07-30' THEN ? ELSE NULL END, CASE WHEN ? BETWEEN '2020-06-01' AND '2020-07-30' THEN ? ELSE NULL END, 2);");
-            statement.setInt(1, guests_id);
-            statement.setString(2, checkin_date);
-            statement.setString(3, checkin_date);
-            statement.setString(4, checkout_date);
-            statement.setString(5, checkout_date);
 
-            try {
-                statement.executeUpdate();
-            } catch (SQLException e) {
-                System.out.println("Error message: " + "\n" + e.getMessage() + "\n");
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    public String testPrint(int guests_id) {
-        String isNull = "";
-        try {
-            statement = connection.prepareStatement("SELECT id, checkin_date, checkout_date FROM guest_bookings WHERE checkin_date IS NULL AND checkout_date IS NULL AND guests_id = ? ");
-            statement.setInt(1, guests_id);
-
-            try {
-                resultSet = statement.executeQuery();
-            } catch (SQLException e) {
-                System.out.println("Error message: " + "\n" + e.getMessage() + "\n");
-            }
-
-
-            while (resultSet.next()) {
-                isNull =
-                        "*************************" + "\n" +
-                                "ID: " + resultSet.getString("id") + "\n" +
-                                "CHECK-IN DATE: " + resultSet.getString("checkin_date") + "\n" +
-                                "CHECK-OUT DATE: " + resultSet.getString("checkout_date") + "\n" +
-                                "*************************" + "\n";
-                System.out.println(isNull);
-
-                if (resultSet.getString("checkin_date") == null) {
-                    return "NULL";
-                }
-
-            }
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return isNull;
-    }
-
-    public void testDeleteDates(int guests_id) {
-
-        try {
-            statement = connection.prepareStatement("DELETE FROM guest_bookings WHERE checkin_date IS NULL AND checkout_date IS NULL AND guests_id = ?;");
-            statement.setInt(1, guests_id);
-
-            try {
-                statement.executeUpdate();
-            } catch (SQLException e) {
-                System.out.println("Error message: " + "\n" + e.getMessage() + "\n");
-            }
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
 
     // Filter with city name?
     public void printBookedDates() {

@@ -111,7 +111,7 @@ public class Booking {
                     System.out.println("Additional bed? [yes]/[no]");
                     String additionalBed = input.nextLine();
 
-                    // Booking step 2, additional choices
+                    // Booking step 2, add additional choices
                     database.addAdditionalChoices(roomID, mealChoice, additionalBed);
 
                     // Get price and proceed to payment

@@ -73,22 +73,13 @@ public class Menu {
         while (running) {
             System.out.println("********** BOOKING MENU **********" + "\n" +
                     "[1] Search destinations and book " + "\n" +
-
-
-                    "[2] Change booking " + "\n" + // Change, find booking, delete booking
-                    "[3] Delete booking " + "\n" +
-
-
-
-                    "[4] All destinations " + "\n" +
-                    "[5] Search customers " + "\n" +
+                    "[2] Change booking " + "\n" + // Not implemented
+                    "[3] Delete booking " + "\n" + // Not implemented
+                    "[4] See all destinations " + "\n" +
+                    "[5] Search customer by name " + "\n" +
                     "\n" +
                     "[0] Back to admin menu");
-
-
             try {
-
-
                 choice = input.nextLine();
 
                 switch (choice) {
@@ -98,8 +89,8 @@ public class Menu {
                         break;
 
                     case "2":
-                        System.out.println("Search booking");
-                        //booking.filterAndBook();
+                        System.out.println("Change booking ");
+
                         break;
 
                     case "3":
@@ -138,10 +129,9 @@ public class Menu {
         while(running){
         System.out.println("********** ROOM MENU **********" + "\n" +
                 "[1] Add new destination " + "\n" +
-                "[2] Add new room to destination " + "\n" + // Change, find booking, delete booking
+                "[2] Add new room to destination " + "\n" +
                 "\n" +
                 "[0] Back to admin menu");
-
 
         try{
 
@@ -166,15 +156,11 @@ public class Menu {
                         System.out.println("You can only make one of the choices listed in the menu choice. ");
                         break;
                 }
-
         }
 
         catch(Exception e){
             System.out.println("Sorry something went wrong. " + e.getMessage());
         }
         }
-
     }
-
-
 }
