@@ -19,7 +19,7 @@ public class Menu {
         while(true){
 
         System.out.println("********** MAIN MENU **********" + "\n" +
-                "[1] Add booking " + "\n" +
+                "[1] Booking menu " + "\n" +
                 "[2] Admin menu [Add room/destination] " + "\n" + // Change, find booking, delete booking
                 "[3] TEST STUFF HERE" + "\n" +
                 "\n" +
@@ -72,11 +72,11 @@ public class Menu {
 
         while (running) {
             System.out.println("********** BOOKING MENU **********" + "\n" +
-                    "[1] Search destinations and book " + "\n" +
+                    "[1] Create booking " + "\n" +
                     "[2] Change booking " + "\n" + // Not implemented
-                    "[3] Cancel booking " + "\n" + // Not implemented
+                    "[3] Cancel booking " + "\n" +
                     "[4] See all destinations " + "\n" +
-                    "[5] Search customer by name " + "\n" +
+                    "[5] Search booking " + "\n" +
                     "\n" +
                     "[0] Back to admin menu");
             try {
@@ -89,17 +89,15 @@ public class Menu {
                         break;
 
                     case "2":
-                        System.out.println("Change booking ");
+                        System.out.println("Change booking "); // Not implemented
 
                         break;
 
                     case "3":
-                        System.out.println("Cancel booking");
                         booking.cancelBooking();
                         break;
 
                     case "4":
-                        System.out.println("All destinations");
                         database.allDestinationsInDatabase();
                         break;
 
@@ -127,9 +125,9 @@ public class Menu {
         String choice = "";
 
         while(running){
-        System.out.println("********** ROOM MENU **********" + "\n" +
-                "[1] Add new destination " + "\n" +
-                "[2] Add new room to destination " + "\n" +
+        System.out.println("********** ADMIN MENU **********" + "\n" +
+                "[1] Add new destination to database " + "\n" +
+                "[2] Add new room to database " + "\n" +
                 "\n" +
                 "[0] Back to admin menu");
 
@@ -164,12 +162,12 @@ public class Menu {
         }
     }
 
+    // Search bookings by first name and last name
     private void adminSearchCustomer(){
         try{
-            System.out.println("Search customer ID");
-            System.out.println("Enter first name: ");
+            System.out.println("Customer first name: ");
             String firstName = input.nextLine();
-            System.out.println("Enter last name: ");
+            System.out.println("Customer last name: ");
             String lastName = input.nextLine();
             if (!database.searchCustomerAndPrint(firstName, lastName)) {
                 System.out.println("Sorry we could not find the name " +firstName+ " " +lastName);
