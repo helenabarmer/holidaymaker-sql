@@ -61,7 +61,7 @@ public class Booking {
                         int datesID = Integer.parseInt(bookedDatesID);
 
                         // Meal choice
-                        System.out.println("Please enter additional meal choices [half board]/[full board]/[NULL]");
+                        System.out.println("Please enter additional meal choices [half board]/[full board]/[none]");
                         String mealChoice = input.nextLine();
 
                         // Additional bed choice
