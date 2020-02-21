@@ -1,5 +1,6 @@
 package com.company;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Booking {
@@ -14,43 +15,44 @@ public class Booking {
 
         try {
             while (true) {
-                System.out.println("********** ROOM BOOKING MENU **********" + "\n" +
+                /*System.out.println("********** ROOM BOOKING MENU **********" + "\n" +
                         "Please enter a destination: " + "\n" +
                         "[Barentsburg] [Stavanger] [Trondheim] [Mo I Rana] [Longyearbyen]");
-                String city = input.nextLine();
+                String city = input.nextLine();*/
+
+
+                //Additional choices
+                // Distance to beach
+                // Distance to centre
+                // price, low to high
+                // Rating, high to low
 
                 // Add reg-ex?
-                System.out.println("Please enter check-in date. Format should be YYYY/MM/DD. ");
-                String checkInDate = input.nextLine();
+                // Validate check-in and checkout dates
+                String[] bookingDates = checkDates();
+                String checkInDate = bookingDates[0];
+                String checkOutDate = bookingDates[1];
 
-                System.out.println("Please enter check-out date. Format should be YYYY/MM/DD. ");
-                String checkOutDate = input.nextLine();
-
-                System.out.println("Please select number of guests");
-                int numberOfGuests = input.nextInt();
-                // Coded to avoid skipping next scanner
+                // Check number of guests
+                int numberOfGuests = checkNumberOfGuests();
+                // Coded to avoid skipping next line
                 input.nextLine();
 
-                System.out.println("Restaurant [true]/[false]: ");
-                boolean restaurant = input.nextBoolean();
+                // Filter amenities
+                boolean[] amenities = filterAmenities();
+                boolean restaurant = amenities[0];
+                boolean kidsClub = amenities[1];
+                boolean pool = amenities[2];
+                boolean entertainment = amenities[3];
 
-                System.out.println("Kids club [true]/[false]: ");
-                boolean kidsClub = input.nextBoolean();
-
-                System.out.println("Pool [true]/[false]: ");
-                boolean pool = input.nextBoolean();
-
-                System.out.println("Entertainment [true]/[false]: ");
-                boolean entertainment = input.nextBoolean();
-                input.nextLine();
                 System.out.println("*************************" + "\n");
 
 
-                if (database.filterRoomsInDatabase(city, checkInDate, checkOutDate, numberOfGuests, restaurant, kidsClub, pool, entertainment)) {
+                if (database.filterRoomsInDatabase(checkInDate, checkOutDate, numberOfGuests, restaurant, kidsClub, pool, entertainment)) {
                     System.out.println("Would you like to proceed the booking? [Y]/[N]");
                     String choice = input.nextLine();
 
-                    if (choice.equals("Y") || choice.equals("y")) {
+                    if (choice.equalsIgnoreCase("Y")) {
                         System.out.println("Please enter the room ID you would like to book: ");
                         int roomID = input.nextInt();
                         input.nextLine();
@@ -80,7 +82,7 @@ public class Booking {
                         break;
 
                     } else {
-                        return;
+                        break;
                     }
                 } else {
                     System.out.println("Something went wrong. Please try again. ");
@@ -95,17 +97,26 @@ public class Booking {
     }
 
     private int registerCustomer(){
-        System.out.println("First name: ");
-        String firstName = input.nextLine();
-        System.out.println("Last name: ");
-        String lastName = input.nextLine();
-        System.out.println("E-mail: ");
-        String email = input.nextLine();
-        System.out.println("Phone number: ");
-        String phoneNumber = input.nextLine();
+        String guestID = "";
 
-        database.addCustomerToDatabase(firstName, lastName, email, phoneNumber);
-        String guestID = database.getCustomerID(firstName, lastName);
+        try{
+            System.out.println("First name: ");
+            String firstName = input.nextLine();
+            System.out.println("Last name: ");
+            String lastName = input.nextLine();
+            System.out.println("E-mail: ");
+            String email = input.nextLine();
+            System.out.println("Phone number: ");
+            String phoneNumber = input.nextLine();
+
+            database.addCustomerToDatabase(firstName, lastName, email, phoneNumber);
+            guestID = database.getCustomerID(firstName, lastName);
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
         return Integer.parseInt(guestID);
     }
 
@@ -126,5 +137,78 @@ public class Booking {
         }
     }
 
+    // Validate check-in and checkout dates
+    // Add reg-ex?
+    private String[] checkDates() {
+        while (true) {
+            try {
+                System.out.println("Please enter check-in date. Format should be YYYY/MM/DD. ");
+                String checkInDate = input.nextLine();
+                System.out.println("Please enter check-out date. Format should be YYYY/MM/DD. ");
+                String checkOutDate = input.nextLine();
+                if (!database.checkBookingDates(checkInDate, checkOutDate)) {
+                    System.out.println("Something went wrong please try again");
+                } else {
+                    return new String[] {checkInDate, checkOutDate};
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
-}
+    private int checkNumberOfGuests(){
+        int numberOfGuests;
+        while(true){
+            System.out.println("Please select number of guests");
+            try{
+                numberOfGuests = input.nextInt();
+                return numberOfGuests;
+            }
+            catch (InputMismatchException e){
+                input.nextLine();
+            }
+        }
+    }
+
+    private boolean[] filterAmenities() {
+        boolean restaurant = false;
+        boolean kidsClub = false;
+        boolean pool = false;
+        boolean entertainment = false;
+
+        System.out.println(
+                "Please fill in your choices by entering the numbers in one line (example 1, 4)" + "\n" +
+                        "[1] Restaurant" + "\n" +
+                        "[2] Kids club" + "\n" +
+                        "[3] Pool" + "\n" +
+                        "[4] Entertainment" + "\n");
+        String choice = input.nextLine();
+
+        char[] array = choice.toCharArray();
+        for (char c : array) {
+            switch (c) {
+                case '1':
+                    restaurant = true;
+                    break;
+
+                case '2':
+                    kidsClub = true;
+                    break;
+
+                case '3':
+                    pool = true;
+                    break;
+
+                case '4':
+                    entertainment = true;
+                    break;
+            }
+        }
+        return new boolean[]{restaurant, kidsClub, pool, entertainment};
+    }
+
+    }
+
+
+

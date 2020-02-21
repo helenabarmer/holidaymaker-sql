@@ -29,7 +29,6 @@ public class DatabaseConnection {
     public void addDestinationToDatabase(String city, String hotelName, boolean restaurant, boolean kidsClub,
                                          boolean pool, boolean entertainment, String rating, String distanceCity,
                                          String distanceBeach, int numberOfRooms) {
-
         try {
             statement = connection.prepareStatement("INSERT INTO destinations (city, hotel_name, restaurant, kids_club, pool, entertainment, rating, distance_centre, distance_beach, number_of_rooms) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             statement.setString(1, city);
@@ -86,8 +85,50 @@ public class DatabaseConnection {
         }
     }
 
+    public boolean checkBookingDates(String checkin_date, String checkout_date){
+        try {
+            statement = connection.prepareStatement("SELECT * FROM booked_dates\n" +
+                    "WHERE ? NOT BETWEEN booked_dates.checkin_date AND booked_dates.checkout_date\n" +
+                    "AND ? NOT BETWEEN booked_dates.checkin_date AND booked_dates.checkout_date\n" +
+                    "AND ? BETWEEN '2020-06-01' AND '2020-07-30'\n" +
+                    "AND ? BETWEEN '2020-06-02' AND '2020-07-31'\n" +
+                    "AND ? > ?;");
 
-    public boolean filterRoomsInDatabase(String city, String checkin_date, String checkout_date, int maximum_guests, boolean restaurant, boolean kids_club, boolean pool, boolean entertainment) {
+            statement.setString(1, checkin_date);
+            statement.setString(2, checkout_date);
+            statement.setString(3, checkin_date);
+            statement.setString(4, checkout_date);
+            statement.setString(5, checkout_date);
+            statement.setString(6, checkin_date);
+
+
+            try {
+                resultSet = statement.executeQuery();
+            } catch (SQLException e) {
+                System.out.println("Error message: " + "\n" + e.getMessage() + "\n");
+            }
+
+            if(resultSet.next()){
+                /*while(resultSet.next()){
+                    String filterDates =
+                                    "BOOKED DATE CHECK-IN: " + resultSet.getString("booked_dates.checkin_date") + "\n" +
+                                    "BOOKED DATE CHECKOUT: " + resultSet.getString("booked_dates.checkout_date") + "\n" +
+                                    "*************************" + "\n";
+                    System.out.println(filterDates);
+
+                }*/
+                return true;
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return false;
+
+    }
+
+
+    public boolean filterRoomsInDatabase(String checkin_date, String checkout_date, int maximum_guests, boolean restaurant, boolean kids_club, boolean pool, boolean entertainment) {
         try {
             statement = connection.prepareStatement("SELECT rooms.id, city, hotel_name, rating, distance_centre, distance_beach, room_type, price_per_night, booked_dates.checkin_date, \n" +
                     "booked_dates.checkout_date \n" +
@@ -96,8 +137,7 @@ public class DatabaseConnection {
                     "ON destinations.id = rooms.destination_id\n" +
                     "JOIN booked_dates\n" +
                     "ON rooms.id = booked_dates.room_id\n" +
-                    "WHERE city = ?\n" +
-                    "AND ? NOT BETWEEN booked_dates.checkin_date AND booked_dates.checkout_date\n" +
+                    "WHERE ? NOT BETWEEN booked_dates.checkin_date AND booked_dates.checkout_date\n" +
                     "AND ? NOT BETWEEN booked_dates.checkin_date AND booked_dates.checkout_date\n" +
                     "AND ? BETWEEN '2020-05-31' AND '2020-07-30'\n" +
                     "AND ? BETWEEN '2020-06-02' AND '2020-07-31'\n" +
@@ -108,18 +148,18 @@ public class DatabaseConnection {
                     "AND pool = ? \n" +
                     "AND entertainment = ?;");
 
-            statement.setString(1, city);
-            statement.setString(2, checkin_date);
-            statement.setString(3, checkout_date);
-            statement.setString(4, checkin_date);
+            //statement.setString(1, city);
+            statement.setString(1, checkin_date);
+            statement.setString(2, checkout_date);
+            statement.setString(3, checkin_date);
+            statement.setString(4, checkout_date);
             statement.setString(5, checkout_date);
-            statement.setString(6, checkout_date);
-            statement.setString(7, checkin_date);
-            statement.setInt(8, maximum_guests);
-            statement.setBoolean(9, restaurant);
-            statement.setBoolean(10, kids_club);
-            statement.setBoolean(11, pool);
-            statement.setBoolean(12, entertainment);
+            statement.setString(6, checkin_date);
+            statement.setInt(7, maximum_guests);
+            statement.setBoolean(8, restaurant);
+            statement.setBoolean(9, kids_club);
+            statement.setBoolean(10, pool);
+            statement.setBoolean(11, entertainment);
 
             try {
                 resultSet = statement.executeQuery();

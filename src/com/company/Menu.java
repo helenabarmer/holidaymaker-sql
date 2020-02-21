@@ -1,5 +1,6 @@
 package com.company;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Menu {
@@ -43,9 +44,7 @@ public class Menu {
                         // Test purpose only
                     case "3":
                         System.out.println("TEST");
-                        //booking.test_dates();
-                        //database.printBookedDates();
-                        database.getCustomerID("Cookie", "Monster");
+
                         break;
 
                     case "0":
@@ -64,6 +63,8 @@ public class Menu {
         }
         }
     }
+
+
 
     private void bookingMenu() {
         boolean running = true;
@@ -85,6 +86,8 @@ public class Menu {
                 switch (choice) {
 
                     case "1":
+                        //booking.bookRoom();
+                        //booking.newBookRoomTEST();
                         booking.bookRoom();
                         break;
 
