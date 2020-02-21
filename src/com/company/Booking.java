@@ -10,7 +10,6 @@ public class Booking {
     public Booking(){
     }
 
-
     public void bookRoom(){
 
         try {
@@ -39,16 +38,28 @@ public class Booking {
                 input.nextLine();
 
                 // Filter amenities
+                // Should be an optional choice?
                 boolean[] amenities = filterAmenities();
                 boolean restaurant = amenities[0];
                 boolean kidsClub = amenities[1];
                 boolean pool = amenities[2];
                 boolean entertainment = amenities[3];
 
+                // Add filter distance to beach
+                // Add filter distance to center
+
                 System.out.println("*************************" + "\n");
 
 
                 if (database.filterRoomsInDatabase(checkInDate, checkOutDate, numberOfGuests, restaurant, kidsClub, pool, entertainment)) {
+                    System.out.println("Would you like to filter this search by rating or price? [Y]/[N]");
+                    String filter = input.nextLine();
+
+                    // Must add to database
+                    if(filter.equalsIgnoreCase("Y")){
+                        String filterSearch = filterByRatingPrice();
+
+                    }
                     System.out.println("Would you like to proceed the booking? [Y]/[N]");
                     String choice = input.nextLine();
 
@@ -118,6 +129,28 @@ public class Booking {
         }
 
         return Integer.parseInt(guestID);
+    }
+
+    private String filterByRatingPrice(){
+        String choice="";
+        while(true) {
+            System.out.println("Filter search by " + "\n" +
+                    "[1] Rating" + "\n" +
+                    "[2] Price (low to high)");
+            try{
+                choice = input.nextLine();
+                if(choice.equals("1") || choice.equals("2")){
+                    return choice;
+                }
+                else{
+                    System.out.println("You can only make an option 1 or 2. Please try again. ");
+                }
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
     }
 
     public void cancelBooking(){

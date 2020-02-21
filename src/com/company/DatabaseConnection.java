@@ -130,15 +130,10 @@ public class DatabaseConnection {
 
     public boolean filterRoomsInDatabase(String checkin_date, String checkout_date, int maximum_guests, boolean restaurant, boolean kids_club, boolean pool, boolean entertainment) {
         try {
-            statement = connection.prepareStatement("SELECT rooms.id, city, hotel_name, rating, distance_centre, distance_beach, room_type, price_per_night, booked_dates.checkin_date, \n" +
-                    "booked_dates.checkout_date \n" +
-                    "FROM destinations\n" +
-                    "JOIN rooms\n" +
-                    "ON destinations.id = rooms.destination_id\n" +
-                    "JOIN booked_dates\n" +
-                    "ON rooms.id = booked_dates.room_id\n" +
-                    "WHERE ? NOT BETWEEN booked_dates.checkin_date AND booked_dates.checkout_date\n" +
-                    "AND ? NOT BETWEEN booked_dates.checkin_date AND booked_dates.checkout_date\n" +
+            statement = connection.prepareStatement("SELECT id, city, hotel_name, rating, distance_centre, distance_beach, room_type, price_per_night, checkin_date, \n" +
+                    "checkout_date FROM bookings\n" +
+                    "WHERE ? NOT BETWEEN checkin_date AND checkout_date\n" +
+                    "AND ? NOT BETWEEN checkin_date AND checkout_date\n" +
                     "AND ? BETWEEN '2020-05-31' AND '2020-07-30'\n" +
                     "AND ? BETWEEN '2020-06-02' AND '2020-07-31'\n" +
                     "AND ? > ? \n" +
@@ -170,7 +165,7 @@ public class DatabaseConnection {
             if(resultSet.next()){
             while(resultSet.next()){
                 String filterRooms =
-                        "ID: " + resultSet.getInt("rooms.id") + "\n" +
+                        "ID: " + resultSet.getInt("id") + "\n" +
                                 "CITY: " + resultSet.getString("city") + "\n" +
                                 "HOTEL NAME: " + resultSet.getString("hotel_name") + "\n" +
                                 "ROOM TYPE: " + resultSet.getString("room_type") + "\n" +
@@ -178,8 +173,8 @@ public class DatabaseConnection {
                                 "DISTANCE CENTRE: " + resultSet.getInt("distance_centre") + "\n" +
                                 "DISTANCE BEACH: " + resultSet.getInt("distance_beach") + "\n" +
                                 "RATING: " + resultSet.getString("rating") + "\n" +
-                                "BOOKED DATE CHECK-IN: " + resultSet.getString("booked_dates.checkin_date") + "\n" +
-                                "BOOKED DATE CHECKOUT: " + resultSet.getString("booked_dates.checkout_date") + "\n" +
+                                "BOOKED DATE CHECK-IN: " + resultSet.getString("checkin_date") + "\n" +
+                                "BOOKED DATE CHECKOUT: " + resultSet.getString("checkout_date") + "\n" +
                                 "*************************" + "\n";
 
                 System.out.println(filterRooms);
