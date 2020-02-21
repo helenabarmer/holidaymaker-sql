@@ -239,7 +239,6 @@ public class DatabaseConnection {
 
 
     public void addCustomerToDatabase(String first_name, String last_name, String email, String phonenumber) {
-
         try {
             statement = connection.prepareStatement("INSERT INTO guest_information (first_name, last_name, email, phonenumber) VALUES (?, ?, ?, ?)");
             statement.setString(1, first_name);

@@ -12,6 +12,8 @@ public class Destination {
     }
 
     public void addNewDestination(){
+
+        try{
             System.out.println("Enter the city: ");
             String city = input.nextLine();
 
@@ -56,6 +58,12 @@ public class Destination {
             database.addDestinationToDatabase(city, hotelName, restaurant, kidsClub,
                     pool, entertainment, rating, distanceCity,
                     distanceBeach, numberOfRooms);
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
 
     }
 }

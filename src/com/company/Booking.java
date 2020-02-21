@@ -78,6 +78,7 @@ public class Booking {
                         // Finish booking and add to booking table in database
                         database.finishBooking(guestID, roomID, choiceID, datesID, numberOfGuests);
                         break;
+
                     } else {
                         return;
                     }
@@ -85,6 +86,7 @@ public class Booking {
                     System.out.println("Something went wrong. Please try again. ");
                     return;
                 }
+
             }
         }
         catch(Exception e){

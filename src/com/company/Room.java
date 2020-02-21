@@ -19,7 +19,6 @@ public class Room {
 
             System.out.println("Add room type (single/double/suite): ");
             String roomType = input.nextLine();
-            //input.nextLine(); // To avoid skipping next line
 
             System.out.println("Add price: ");
             int price = input.nextInt();
