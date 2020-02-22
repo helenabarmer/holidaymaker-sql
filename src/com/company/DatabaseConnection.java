@@ -379,7 +379,7 @@ public class DatabaseConnection {
         catch(Exception e){
             e.printStackTrace();
         }
-        System.out.println(ID);
+        //System.out.println(ID);
         return ID.toString();
     }
 
@@ -502,49 +502,31 @@ public class DatabaseConnection {
 
     }
 
-
-
-    // Filter with city name?
-    public void printBookedDates() {
+    public void changeBooking(String tableName, String columnName, String newValue, String condition, int conditionEquals){
+        String sql = "UPDATE " + tableName + " SET `" + columnName + "` = ? WHERE " + condition + " =  ?";
         try {
-            statement = connection.prepareStatement("SELECT city, hotel_name, room_type,checkin_date, checkout_date FROM guest_bookings\n" +
-                    "JOIN rooms\n" +
-                    "ON rooms.id = guest_bookings.room_id\n" +
-                    "JOIN destinations\n" +
-                    "ON destinations.id = rooms.destination_id");
-            resultSet = statement.executeQuery();
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, newValue);
+            statement.setInt(2, conditionEquals);
 
-            System.out.println("CITY          |          HOTEL NAME          |          ROOM TYPE          |          CHECK-IN          |          CHECKOUT          |" + "\n" +
-                    "**************************************************************************************************************************************" + "\n");
-            while (resultSet.next()) {
-                String city =resultSet.getString("city");
-                String hotelName = resultSet.getString("hotel_name");
-                String roomtype = resultSet.getString("room_type") ;
-                String checkin = resultSet.getString("checkin_date");
-                String checkout = resultSet.getString("checkout_date");
-                String roomInformation =
-                        city + "              |" + "          " + hotelName + "          |" +
-                                "          " + roomtype + "          |" + "          " + checkin + "          |" +
-                                "          " + checkout + "          |" + "\n" +
-                                "**************************************************************************************************************************************" + "\n";
-                System.out.println(roomInformation);
-
-                /*"CITY |   HOTEL NAME |  ROOM TYPE |  CHECK-IN |    CHECKOUT |" + "\n" +
-                        "***************************************************" + "\n" +
-                        "CITY: " + resultSet.getString("city") + "\n" +
-                        "HOTEL NAME: " + resultSet.getString("hotel_name") + "\n" +
-                        "ROOM TYPE: " + resultSet.getString("room_type") + "\n" +
-                        "CHECK-IN: " + resultSet.getString("checkin_date") + "\n" +
-                        "CHECKOUT: " + resultSet.getString("checkout_date") + "\n" +
-                        "*************************" + "\n";*/
+            try {
+                statement.executeUpdate();
+                String updatedInformation =
+                        "*********************************************" + "\n" +
+                                "CHANGED VALUE: " + columnName + "\n" +
+                                "UPDATED INFORMATION: " + newValue + "\n" +
+                                "*********************************************" + "\n";
+                System.out.println(updatedInformation);
+            } catch (NullPointerException e) {
+                System.out.println("Error message: " + "\n" + e.getMessage() + "\n");
             }
 
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
-
     }
+
 }
 
 

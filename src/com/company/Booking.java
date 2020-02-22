@@ -14,18 +14,6 @@ public class Booking {
 
         try {
             while (true) {
-                /*System.out.println("********** ROOM BOOKING MENU **********" + "\n" +
-                        "Please enter a destination: " + "\n" +
-                        "[Barentsburg] [Stavanger] [Trondheim] [Mo I Rana] [Longyearbyen]");
-                String city = input.nextLine();*/
-
-
-                //Additional choices
-                // Distance to beach
-                // Distance to centre
-                // price, low to high
-                // Rating, high to low
-
                 // Add reg-ex?
                 // Validate check-in and checkout dates
                 String[] bookingDates = checkDates();
@@ -96,19 +84,23 @@ public class Booking {
                             // Register new guest and get guest ID
 
 
-                            /*if(addCustomerToBooking()){
+                            if(addCustomerToBooking()){
                                 int guestID = addExistingCustomer();
                                 database.finishBooking(guestID, roomID, choiceID, datesID, numberOfGuests);
+                                System.out.println("Booking successfully added." + "\n" +
+                                        "Booking ID: " +guestID);
                             }
                             else{
                                 int guestID = registerNewCustomer();
                                 database.finishBooking(guestID, roomID, choiceID, datesID, numberOfGuests);
-                            }*/
+                                System.out.println("Booking successfully added." + "\n" +
+                                        "Booking ID: " +guestID);
+                            }
 
-                            int guestID = registerNewCustomer();
-                            System.out.println(" Guest ID " + guestID);
+                            //int guestID = registerNewCustomer();
+                            //System.out.println(" Guest ID " + guestID);
                             // Finish booking and add to booking table in database
-                            database.finishBooking(guestID, roomID, choiceID, datesID, numberOfGuests);
+                            //database.finishBooking(guestID, roomID, choiceID, datesID, numberOfGuests);
                             break;
 
                         } else {
@@ -127,6 +119,85 @@ public class Booking {
         catch(Exception e){
             e.printStackTrace();
         }
+    }
+
+    private void changeBooking(){
+        String choice;
+        System.out.println("Add booking ID: ");
+        String bookingID = input.nextLine();
+
+        System.out.println("What would you like to change in the booking: " + "\n" +
+                "[1] Customer information" + "\n" +
+                "[2] Number of guests" + "\n" +
+                "[3] Check-in and/or checkout date" + "\n" +
+                "[4] Room type" +
+                "[5] Add meal or additional bed");
+        choice = input.nextLine();
+
+        switch (choice){
+            case "1":
+                break;
+
+            case "2":
+                break;
+
+            case "3":
+                break;
+
+            case "4":
+                break;
+
+            case "5":
+                break;
+
+        }
+    }
+
+    public void changeCustomerInformation(){
+        try{
+        System.out.println("Please enter customer ID: ");
+        int conditionEquals = input.nextInt();
+        input.nextLine();
+
+        System.out.println("Change: " + "\n" +
+                "[1] First name" + "\n" +
+                "[2] Last name" + "\n" +
+                "[3] E-mail" + "\n" +
+                "[4] Phone number");
+
+            String choice = input.nextLine();
+
+            switch (choice){
+                case "1":
+                    System.out.println("Enter new first name: ");
+                    String newFirstName = input.nextLine();
+                    database.changeBooking("guest_information", "first_name", newFirstName, "id", conditionEquals);
+                    break;
+
+                case "2":
+                    System.out.println("Enter new last name: ");
+                    String newLastName = input.nextLine();
+                    database.changeBooking("guest_information", "last_name", newLastName, "id", conditionEquals);
+                    break;
+
+                case "3":
+                    System.out.println("Enter new email: ");
+                    String newEmail = input.nextLine();
+                    database.changeBooking("guest_information", "email", newEmail, "id", conditionEquals);
+                    break;
+
+                case "4":
+                    System.out.println("Enter new phone number: ");
+                    String newPhoneNumber = input.nextLine();
+                    database.changeBooking("guest_information", "phonenumber", newPhoneNumber, "id", conditionEquals);
+                    break;
+            }
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     private boolean addCustomerToBooking(){
