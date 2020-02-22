@@ -121,38 +121,49 @@ public class Booking {
         }
     }
 
-    private void changeBooking(){
-        String choice;
-        System.out.println("Add room ID: ");
-        int bookingID = input.nextInt();
+    public void changeBooking(){
+        try{
+            String choice;
+            System.out.println("Add room ID: ");
+            int bookingID = input.nextInt();
 
-        System.out.println("UPDATE: " + "\n" +
-                "[1] Customer information" + "\n" +
-                "[2] Number of guests" + "\n" +
-                "[3] Check-in and/or checkout date" + "\n" +
-                "[4] Room type" +
-                "[5] Add meal or additional bed");
-        choice = input.nextLine();
+            System.out.println("UPDATE: " + "\n" +
+                    "[1] Customer information" + "\n" +
+                    "[2] Number of guests" + "\n" +
+                    "[3] Check-in and/or checkout date" + "\n" +
+                    "[4] Room" +
+                    "[5] Add meal or additional bed");
+            choice = input.nextLine();
 
-        switch (choice){
-            case "1":
-                changeCustomerInformation();
-                break;
+            switch (choice){
+                case "1":
+                    changeCustomerInformation();
+                    break;
 
-            case "2":
-                changeNumberOfGuests(bookingID);
-                break;
+                case "2":
+                    changeNumberOfGuests(bookingID);
+                    break;
 
-            case "3":
-                changeCheckinCheckoutDate();
-                break;
+                case "3":
+                    changeCheckinCheckoutDate();
+                    break;
 
-            case "4":
-                break;
+                case "4":
+                    System.out.println("Not implemented yet. ");
+                    break;
 
-            case "5":
-                break;
+                case "5":
+                    System.out.println("Not implemented yet. ");
+                    break;
 
+                default:
+                    break;
+
+            }
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
         }
     }
 

@@ -1,6 +1,5 @@
 package com.company;
 
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Menu {
@@ -15,7 +14,6 @@ public class Menu {
     }
 
     private void mainMenu(){
-        //boolean running = true;
         String choice = "";
         while(true){
 
@@ -89,8 +87,7 @@ public class Menu {
                         break;
 
                     case "2":
-                        System.out.println("Change booking "); // Not implemented
-
+                        booking.changeBooking();
                         break;
 
                     case "3":

@@ -1,5 +1,4 @@
 package com.company;
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 
 import java.sql.*;
 import java.sql.Connection;
@@ -103,7 +102,6 @@ public class DatabaseConnection {
             statement.setString(5, checkout_date);
             statement.setString(6, checkin_date);
 
-
             try {
                 resultSet = statement.executeQuery();
             } catch (SQLException e) {
@@ -111,14 +109,6 @@ public class DatabaseConnection {
             }
 
             if(resultSet.next()){
-                /*while(resultSet.next()){
-                    String filterDates =
-                                    "BOOKED DATE CHECK-IN: " + resultSet.getString("booked_dates.checkin_date") + "\n" +
-                                    "BOOKED DATE CHECKOUT: " + resultSet.getString("booked_dates.checkout_date") + "\n" +
-                                    "*************************" + "\n";
-                    System.out.println(filterDates);
-
-                }*/
                 return true;
             }
         }
@@ -189,7 +179,6 @@ public class DatabaseConnection {
 
         if(filterRating){
             statement = connection.prepareStatement(sqlFilterRating);
-
         }
         else if(filterPrice){
             statement = connection.prepareStatement(sqlFilterPrice);
@@ -299,7 +288,7 @@ public class DatabaseConnection {
             statement.setInt(2, booked_dates_id);
             statement.setString(3, meal_choice);
             statement.setString(4, additional_bed);
-            System.out.println("STEP 1:  choices added. ");
+
             try {
                 statement.executeUpdate();
             } catch (SQLException e) {
@@ -333,7 +322,6 @@ public class DatabaseConnection {
         return ID.toString();
 
     }
-
 
 
     public void addCustomerToDatabase(String first_name, String last_name, String email, String phonenumber) {
@@ -379,7 +367,6 @@ public class DatabaseConnection {
         catch(Exception e){
             e.printStackTrace();
         }
-        //System.out.println(ID);
         return ID.toString();
     }
 
@@ -406,17 +393,10 @@ public class DatabaseConnection {
     // Get information from bookings view instead?
     public boolean searchBookingAndPrint(String first_name, String last_name) {
         try {
-            statement = connection.prepareStatement("SELECT guest_bookings.id, first_name, last_name, city, hotel_name, checkin_date, checkout_date FROM guest_bookings\n" +
-                    "JOIN guest_information\n" +
-                    "ON guest_information.id = guest_bookings.guests_id\n" +
-                    "JOIN booked_dates\n" +
-                    "ON booked_dates.booked_ID = guest_bookings.booked_dates_id\n" +
-                    "JOIN rooms\n" +
-                    "ON rooms.id = guest_bookings.id\n" +
-                    "JOIN destinations\n" +
-                    "ON destinations.id = rooms.destination_id\n" +
+            statement = connection.prepareStatement("SELECT id, first_name, last_name, city, hotel_name, checkin_date, checkout_date FROM all_booked_guests\n" +
                     "WHERE first_name = ?\n" +
                     "AND last_name = ?;");
+
             statement.setString(1, first_name);
             statement.setString(2, last_name);
 
