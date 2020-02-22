@@ -45,61 +45,76 @@ public class Booking {
                 boolean pool = amenities[2];
                 boolean entertainment = amenities[3];
 
-                // Add filter distance to beach
-                // Add filter distance to center
-
+                // Filter distance to beach and distance to centre
+                int[] distanceToBeachAndCentre = distanceSearch();
+                int distanceBeach = distanceToBeachAndCentre[0];
+                int distanceCentre = distanceToBeachAndCentre[1];
                 System.out.println("*************************" + "\n");
 
 
-                if (database.testFilterWithRatingPrice(checkInDate, checkOutDate, numberOfGuests, restaurant, kidsClub, pool, entertainment, false, false)) {
+                if (database.filterRoomsInDatabase(checkInDate, checkOutDate, numberOfGuests, restaurant, kidsClub, pool, entertainment, false, false, distanceBeach, distanceCentre)) {
                     System.out.println("Would you like to filter this search by rating or price? [Y]/[N]");
                     String filter = input.nextLine();
 
-                    // Must add to database
+                    // Filter for ordering by rating or price
                     if(filter.equalsIgnoreCase("Y")){
                         boolean[] filterSearch = filterByRatingPrice();
                         boolean rating = filterSearch[0];
                         boolean price = filterSearch[1];
-                        database.testFilterWithRatingPrice(checkInDate, checkOutDate, numberOfGuests, restaurant, kidsClub, pool, entertainment, rating, price);
+                        database.filterRoomsInDatabase(checkInDate, checkOutDate, numberOfGuests, restaurant, kidsClub, pool, entertainment, rating, price, distanceBeach, distanceCentre);
+                    }
+
+                        System.out.println("Would you like to proceed the booking? [Y]/[N]");
+                        String choice = input.nextLine();
+
+                        if (choice.equalsIgnoreCase("Y")) {
+                            System.out.println("Please enter the room ID you would like to book: ");
+                            int roomID = input.nextInt();
+                            input.nextLine();
+
+                            // Add check-in and checkout dates to database
+                            // Return booked dates ID for bookings table
+                            String bookedDatesID = database.addBookingRoom(roomID, checkInDate, checkOutDate);
+                            int datesID = Integer.parseInt(bookedDatesID);
+
+                            // Meal choice
+                            System.out.println("Please enter additional meal choices [half board]/[full board]/[none]");
+                            String mealChoice = input.nextLine();
+
+                            // Additional bed choice
+                            System.out.println("Additional bed? [yes]/[no]");
+                            String additionalBed = input.nextLine();
+
+                            // Add additional choices to database
+                            String additionalChoice = database.addAdditionalChoices(mealChoice, additionalBed);
+                            int choiceID = Integer.parseInt(additionalChoice);
+                            System.out.println("Choice ID = " + choiceID);
+
+                            // Add if they have been a guest before to book with this ID?
+                            // Register new guest and get guest ID
+
+                            /*if(addCustomerToBooking()){
+                                int guestID = addExistingCustomer();
+                                database.finishBooking(guestID, roomID, choiceID, datesID, numberOfGuests);
+                            }
+                            else{
+                                int guestID = registerNewCustomer();
+                                database.finishBooking(guestID, roomID, choiceID, datesID, numberOfGuests);
+                            }*/
+
+                            int guestID = registerNewCustomer();
+                            // Finish booking and add to booking table in database
+                            database.finishBooking(guestID, roomID, choiceID, datesID, numberOfGuests);
+                            break;
+
+                        } else {
+                            break;
+                        }
 
                     }
-                    System.out.println("Would you like to proceed the booking? [Y]/[N]");
-                    String choice = input.nextLine();
 
-                    if (choice.equalsIgnoreCase("Y")) {
-                        System.out.println("Please enter the room ID you would like to book: ");
-                        int roomID = input.nextInt();
-                        input.nextLine();
-
-                        // Add check-in and checkout dates to database
-                        // Return booked dates ID for bookings table?
-                        String bookedDatesID = database.addBookingRoom(roomID, checkInDate, checkOutDate);
-                        int datesID = Integer.parseInt(bookedDatesID);
-
-                        // Meal choice
-                        System.out.println("Please enter additional meal choices [half board]/[full board]/[none]");
-                        String mealChoice = input.nextLine();
-
-                        // Additional bed choice
-                        System.out.println("Additional bed? [yes]/[no]");
-                        String additionalBed = input.nextLine();
-
-                        // Add additional choices to database
-                        String additionalChoice = database.addAdditionalChoices(mealChoice, additionalBed);
-                        int choiceID = Integer.parseInt(additionalChoice);
-
-                        // Register new guest and get guest ID
-                        int guestID = registerCustomer();
-
-                        // Finish booking and add to booking table in database
-                        database.finishBooking(guestID, roomID, choiceID, datesID, numberOfGuests);
-                        break;
-
-                    } else {
-                        break;
-                    }
-                } else {
-                    System.out.println("Something went wrong. Please try again. ");
+                else {
+                    System.out.println("There are no results that match your search. Please try again.  ");
                     return;
                 }
 
@@ -110,7 +125,73 @@ public class Booking {
         }
     }
 
-    private int registerCustomer(){
+    private boolean addCustomerToBooking(){
+        int choice;
+        while (true) {
+            System.out.println("Select choice:" + "\n" +
+                    "[1] Register new customer" + "\n" +
+                    "[2] Find existing customer");
+            try {
+                choice = input.nextInt();
+                input.nextLine();
+                if (choice == 1) {
+                    return false;
+                }
+                if (choice == 2) {
+                    return true;
+                } else {
+                    System.out.println("You can only make an option 1 or 2. Please try again. ");
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    private int addExistingCustomer(){
+        String guestID = "";
+
+        while (true) {
+            try {
+                    System.out.println("Enter first name: ");
+                    String firstName = input.nextLine();
+                    System.out.println("Enter last name: ");
+                    String lastName = input.nextLine();
+                    guestID = database.getCustomerID(firstName, lastName);
+                    break;
+                }
+            catch (Exception  e) {
+                e.printStackTrace();
+            }
+        }
+        return Integer.parseInt(guestID);
+        }
+
+
+
+
+
+
+    // Filter distance to beach and centre
+    private int []distanceSearch(){
+        while (true) {
+            try {
+                System.out.println("Minimum distance in metres to beach: ");
+                int distanceBeach = input.nextInt();
+                System.out.println("Minimum distance to centre: ");
+                int distanceCentre = input.nextInt();
+                input.nextLine();
+                return new int[]{distanceBeach, distanceCentre};
+            }
+            catch (InputMismatchException e){
+                input.nextLine();
+            }
+        }
+    }
+
+    private int registerNewCustomer(){
         String guestID = "";
 
         try{
@@ -145,6 +226,7 @@ public class Booking {
                     "[2] Price (low to high)");
             try {
                 choice = input.nextInt();
+                input.nextLine();
                 if (choice == 1) {
                     rating = true;
                     break;
@@ -159,14 +241,9 @@ public class Booking {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         }
         return new boolean[]{rating, price};
     }
-
-
-
-
 
 
 
@@ -174,6 +251,7 @@ public class Booking {
         try{
             System.out.println("Enter the booking ID to cancel the booking: ");
             int bookingID = input.nextInt();
+            input.nextLine();
             System.out.println("You will now cancel the booking with ID " + bookingID + "\n" +
                     "Proceed? [Y]/[N]");
             String choice = input.nextLine();
@@ -256,6 +334,23 @@ public class Booking {
             }
         }
         return new boolean[]{restaurant, kidsClub, pool, entertainment};
+    }
+
+    // Search bookings by first name and last name
+    public void searchBooking(){
+        try{
+            System.out.println("Customer first name: ");
+            String firstName = input.nextLine();
+            System.out.println("Customer last name: ");
+            String lastName = input.nextLine();
+            if (!database.searchBookingAndPrint(firstName, lastName)) {
+                System.out.println("Sorry we could not find the name " +firstName+ " " +lastName);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     }

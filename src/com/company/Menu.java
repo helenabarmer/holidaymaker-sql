@@ -44,7 +44,6 @@ public class Menu {
                         // Test purpose only
                     case "3":
                         System.out.println("TEST");
-
                         break;
 
                     case "0":
@@ -73,7 +72,7 @@ public class Menu {
 
         while (running) {
             System.out.println("********** BOOKING MENU **********" + "\n" +
-                    "[1] Create booking " + "\n" +
+                    "[1] Add new booking " + "\n" +
                     "[2] Change booking " + "\n" + // Not implemented
                     "[3] Cancel booking " + "\n" +
                     "[4] See all destinations " + "\n" +
@@ -86,8 +85,6 @@ public class Menu {
                 switch (choice) {
 
                     case "1":
-                        //booking.bookRoom();
-                        //booking.newBookRoomTEST();
                         booking.bookRoom();
                         break;
 
@@ -105,7 +102,7 @@ public class Menu {
                         break;
 
                     case "5":
-                        adminSearchCustomer();
+                        booking.searchBooking();
                         break;
 
                     case "0":
@@ -165,20 +162,5 @@ public class Menu {
         }
     }
 
-    // Search bookings by first name and last name
-    private void adminSearchCustomer(){
-        try{
-            System.out.println("Customer first name: ");
-            String firstName = input.nextLine();
-            System.out.println("Customer last name: ");
-            String lastName = input.nextLine();
-            if (!database.searchCustomerAndPrint(firstName, lastName)) {
-                System.out.println("Sorry we could not find the name " +firstName+ " " +lastName);
-            }
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
 
-    }
 }

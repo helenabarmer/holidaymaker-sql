@@ -128,9 +128,11 @@ public class DatabaseConnection {
     }
 
 
-    public boolean filterRoomsInDatabase(String checkin_date, String checkout_date, int maximum_guests, boolean restaurant, boolean kids_club, boolean pool, boolean entertainment) {
+    public boolean filterRoomsInDatabase(String checkin_date, String checkout_date, int maximum_guests, boolean restaurant, boolean kids_club, boolean pool, boolean entertainment, boolean filterRating,
+                                  boolean filterPrice, int distance_beach, int distance_centre){
+
         try {
-            statement = connection.prepareStatement("SELECT id, city, hotel_name, rating, distance_centre, distance_beach, room_type, price_per_night, checkin_date, \n" +
+            String sqlFilterRooms = "SELECT id, city, hotel_name, rating, distance_beach, distance_centre, room_type, price_per_night, checkin_date, \n" +
                     "checkout_date FROM bookings\n" +
                     "WHERE ? NOT BETWEEN checkin_date AND checkout_date\n" +
                     "AND ? NOT BETWEEN checkin_date AND checkout_date\n" +
@@ -141,70 +143,9 @@ public class DatabaseConnection {
                     "AND restaurant = ? \n" +
                     "AND kids_club = ? \n" +
                     "AND pool = ? \n" +
-                    "AND entertainment = ?;");
-
-            //statement.setString(1, city);
-            statement.setString(1, checkin_date);
-            statement.setString(2, checkout_date);
-            statement.setString(3, checkin_date);
-            statement.setString(4, checkout_date);
-            statement.setString(5, checkout_date);
-            statement.setString(6, checkin_date);
-            statement.setInt(7, maximum_guests);
-            statement.setBoolean(8, restaurant);
-            statement.setBoolean(9, kids_club);
-            statement.setBoolean(10, pool);
-            statement.setBoolean(11, entertainment);
-
-            try {
-                resultSet = statement.executeQuery();
-            } catch (SQLException e) {
-                System.out.println("Error message: " + "\n" + e.getMessage() + "\n");
-            }
-
-            if(resultSet.next()){
-            while(resultSet.next()){
-                String filterRooms =
-                        "ID: " + resultSet.getInt("id") + "\n" +
-                                "CITY: " + resultSet.getString("city") + "\n" +
-                                "HOTEL NAME: " + resultSet.getString("hotel_name") + "\n" +
-                                "ROOM TYPE: " + resultSet.getString("room_type") + "\n" +
-                                "PRICE: " + resultSet.getString("price_per_night") + "\n" +
-                                "DISTANCE CENTRE: " + resultSet.getInt("distance_centre") + "\n" +
-                                "DISTANCE BEACH: " + resultSet.getInt("distance_beach") + "\n" +
-                                "RATING: " + resultSet.getString("rating") + "\n" +
-                                "BOOKED DATE CHECK-IN: " + resultSet.getString("checkin_date") + "\n" +
-                                "BOOKED DATE CHECKOUT: " + resultSet.getString("checkout_date") + "\n" +
-                                "*************************" + "\n";
-
-                System.out.println(filterRooms);
-
-            }
-            return true;
-            }
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    public boolean testFilterWithRatingPrice(String checkin_date, String checkout_date, int maximum_guests, boolean restaurant, boolean kids_club, boolean pool, boolean entertainment, boolean filterRating,
-                                  boolean filterPrice){
-
-        try {
-            String sqlFilterRooms = "SELECT id, city, hotel_name, rating, distance_centre, distance_beach, room_type, price_per_night, checkin_date, \n" +
-                    "checkout_date FROM bookings\n" +
-                    "WHERE ? NOT BETWEEN checkin_date AND checkout_date\n" +
-                    "AND ? NOT BETWEEN checkin_date AND checkout_date\n" +
-                    "AND ? BETWEEN '2020-05-31' AND '2020-07-30'\n" +
-                    "AND ? BETWEEN '2020-06-02' AND '2020-07-31'\n" +
-                    "AND ? > ? \n" +
-                    "AND maximum_guests >= ? " +
-                    "AND restaurant = ? \n" +
-                    "AND kids_club = ? \n" +
-                    "AND pool = ? \n" +
-                    "AND entertainment = ?;";
+                    "AND entertainment = ? \n" +
+                    "AND distance_beach <= ? \n" +
+                    "AND distance_centre <= ?;";
 
             String sqlFilterRating = "SELECT id, city, hotel_name, rating, distance_centre, distance_beach, room_type, price_per_night, checkin_date, \n" +
                     "checkout_date FROM bookings\n" +
@@ -218,6 +159,8 @@ public class DatabaseConnection {
                     "AND kids_club = ? \n" +
                     "AND pool = ? \n" +
                     "AND entertainment = ? \n" +
+                    "AND distance_beach <= ? \n" +
+                    "AND distance_centre <= ? \n" +
                     "ORDER BY rating DESC;";
 
             String sqlFilterPrice = "SELECT id, city, hotel_name, rating, distance_centre, distance_beach, room_type, price_per_night, checkin_date, \n" +
@@ -232,6 +175,8 @@ public class DatabaseConnection {
                     "AND kids_club = ? \n" +
                     "AND pool = ? \n" +
                     "AND entertainment = ? \n" +
+                    "AND distance_beach <= ? \n" +
+                    "AND distance_centre <= ? \n" +
                     "ORDER BY price_per_night ASC;";
 
         if(filterRating){
@@ -257,6 +202,8 @@ public class DatabaseConnection {
             statement.setBoolean(9, kids_club);
             statement.setBoolean(10, pool);
             statement.setBoolean(11, entertainment);
+            statement.setInt(12, distance_beach);
+            statement.setInt(13, distance_centre);
 
             try {
                 resultSet = statement.executeQuery();
@@ -411,7 +358,7 @@ public class DatabaseConnection {
             resultSet = statement.executeQuery();
 
             while (resultSet.next()){
-                ID.append(resultSet.getString("ID"));
+                ID.append(resultSet.getString("id"));
             }
 
         }
@@ -442,7 +389,8 @@ public class DatabaseConnection {
 
     }
 
-    public boolean searchCustomerAndPrint(String first_name, String last_name) {
+    // Get information from bookings view instead?
+    public boolean searchBookingAndPrint(String first_name, String last_name) {
         try {
             statement = connection.prepareStatement("SELECT guest_bookings.id, first_name, last_name, city, hotel_name, checkin_date, checkout_date FROM guest_bookings\n" +
                     "JOIN guest_information\n" +
@@ -484,6 +432,37 @@ public class DatabaseConnection {
             ex.printStackTrace();
         }
         return false;
+    }
+
+    public void searchGuestAndPrint(String first_name, String last_name){
+        try {
+            statement = connection.prepareStatement("SELECT * FROM guest_information\n" +
+                    "WHERE first_name = ?\n" +
+                    "AND last_name = ?;");
+            statement.setString(1, first_name);
+            statement.setString(2, last_name);
+
+            try {
+                resultSet = statement.executeQuery();
+            } catch (SQLException e) {
+                System.out.println("Error message: " + "\n" + e.getMessage() + "\n");
+            }
+
+            while (resultSet.next()) {
+                String roomInformation =
+                        "*************************" + "\n" +
+                                "GUEST ID: " + resultSet.getString("id") + "\n" +
+                                "FIRST NAME: " + resultSet.getString("first_name") + "\n" +
+                                "LAST NAME: " + resultSet.getString("last_name") + "\n" +
+                                "E-MAIL: " + resultSet.getString("email") + "\n" +
+                                "PHONE NUMBER: " + resultSet.getString("phonenumber") + "\n" +
+                                "*************************" + "\n";
+                System.out.println(roomInformation);
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void cancelBooking(int id){
