@@ -138,7 +138,7 @@ public class DatabaseConnection {
                     "checkout_date FROM bookings\n" +
                     "WHERE ? NOT BETWEEN checkin_date AND checkout_date\n" +
                     "AND ? NOT BETWEEN checkin_date AND checkout_date\n" +
-                    "AND ? BETWEEN '2020-05-31' AND '2020-07-30'\n" +
+                    "AND ? BETWEEN '2020-06-01' AND '2020-07-30'\n" +
                     "AND ? BETWEEN '2020-06-02' AND '2020-07-31'\n" +
                     "AND ? > ? \n" +
                     "OR checkin_date IS NULL\n" +
@@ -155,7 +155,7 @@ public class DatabaseConnection {
                     "checkout_date FROM bookings\n" +
                     "WHERE ? NOT BETWEEN checkin_date AND checkout_date\n" +
                     "AND ? NOT BETWEEN checkin_date AND checkout_date\n" +
-                    "AND ? BETWEEN '2020-05-31' AND '2020-07-30'\n" +
+                    "AND ? BETWEEN '2020-06-01' AND '2020-07-30'\n" +
                     "AND ? BETWEEN '2020-06-02' AND '2020-07-31'\n" +
                     "AND ? > ? \n" +
                     "OR checkin_date IS NULL\n" +
@@ -173,7 +173,7 @@ public class DatabaseConnection {
                     "checkout_date FROM bookings\n" +
                     "WHERE ? NOT BETWEEN checkin_date AND checkout_date\n" +
                     "AND ? NOT BETWEEN checkin_date AND checkout_date\n" +
-                    "AND ? BETWEEN '2020-05-31' AND '2020-07-30'\n" +
+                    "AND ? BETWEEN '2020-06-01' AND '2020-07-30'\n" +
                     "AND ? BETWEEN '2020-06-02' AND '2020-07-31'\n" +
                     "AND ? > ? \n" +
                     "OR checkin_date IS NULL\n" +
@@ -502,12 +502,13 @@ public class DatabaseConnection {
 
     }
 
-    public void changeBooking(String tableName, String columnName, String newValue, String condition, int conditionEquals){
-        String sql = "UPDATE " + tableName + " SET `" + columnName + "` = ? WHERE " + condition + " =  ?";
+    public void changeCustomerBooking(String tableName, String columnName, String newValue, String columnID, int id){
+        String sql = "UPDATE " + tableName + " SET `" + columnName + "` = ? WHERE " + columnID + " =  ?";
         try {
+
             statement = connection.prepareStatement(sql);
             statement.setString(1, newValue);
-            statement.setInt(2, conditionEquals);
+            statement.setInt(2, id);
 
             try {
                 statement.executeUpdate();
@@ -515,6 +516,64 @@ public class DatabaseConnection {
                         "*********************************************" + "\n" +
                                 "CHANGED VALUE: " + columnName + "\n" +
                                 "UPDATED INFORMATION: " + newValue + "\n" +
+                                "*********************************************" + "\n";
+                System.out.println(updatedInformation);
+            } catch (NullPointerException e) {
+                System.out.println("Error message: " + "\n" + e.getMessage() + "\n");
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
+    public void changeNumberOfGuests(int total_guests, int id){
+        String sql = "UPDATE all_booked_guests\n" +
+                "SET total_guests = ?\n" +
+                "WHERE ?<= maximum_guests\n" +
+                "AND id = ?;";
+        try {
+            statement = connection.prepareStatement(sql);
+            statement.setInt(1, total_guests);
+            statement.setInt(2, total_guests);
+            statement.setInt(3, id);
+
+            try {
+                statement.executeUpdate();
+                String updatedInformation =
+                        "*********************************************" + "\n" +
+                                "CHANGED VALUE: total_guests" + "\n" +
+                                "UPDATED INFORMATION: " + total_guests + "\n" +
+                                "*********************************************" + "\n";
+                System.out.println(updatedInformation);
+            } catch (NullPointerException e) {
+                System.out.println("Error message: " + "\n" + e.getMessage() + "\n");
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
+    public void changeCheckinCheckoutDate(int room_id, String checkin_date, String checkout_date){
+        String sql = "UPDATE booked_dates\n" +
+                "SET checkin_date = ?, checkout_date = ?\n" +
+                "WHERE room_id = ?;";
+        try {
+            statement = connection.prepareStatement(sql);
+            statement.setString(1, checkin_date);
+            statement.setString(2, checkout_date);
+            statement.setInt(3, room_id);
+
+            try {
+                statement.executeUpdate();
+                String updatedInformation =
+                        "*********************************************" + "\n" +
+                                "CHANGED VALUE: booked_dates" + "\n" +
+                                "UPDATED INFORMATION CHECK-IN DATE: " + checkin_date + "\n" +
+                                "UPDATED INFORMATION CHECKOUT DATE: " + checkout_date + "\n" +
                                 "*********************************************" + "\n";
                 System.out.println(updatedInformation);
             } catch (NullPointerException e) {

@@ -123,10 +123,10 @@ public class Booking {
 
     private void changeBooking(){
         String choice;
-        System.out.println("Add booking ID: ");
-        String bookingID = input.nextLine();
+        System.out.println("Add room ID: ");
+        int bookingID = input.nextInt();
 
-        System.out.println("What would you like to change in the booking: " + "\n" +
+        System.out.println("UPDATE: " + "\n" +
                 "[1] Customer information" + "\n" +
                 "[2] Number of guests" + "\n" +
                 "[3] Check-in and/or checkout date" + "\n" +
@@ -136,12 +136,15 @@ public class Booking {
 
         switch (choice){
             case "1":
+                changeCustomerInformation();
                 break;
 
             case "2":
+                changeNumberOfGuests(bookingID);
                 break;
 
             case "3":
+                changeCheckinCheckoutDate();
                 break;
 
             case "4":
@@ -153,7 +156,37 @@ public class Booking {
         }
     }
 
-    public void changeCustomerInformation(){
+    private void changeCheckinCheckoutDate(){
+        try{
+            System.out.println("Enter room ID: ");
+            String stringRoomID = input.nextLine();
+            int roomID = Integer.parseInt(stringRoomID);
+            System.out.println("Enter new check-in and checkout dates below. " + "\n");
+            String[] bookingDates = checkDates();
+            String checkInDate = bookingDates[0];
+            String checkOutDate = bookingDates[1];
+            database.changeCheckinCheckoutDate(roomID, checkInDate, checkOutDate );
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+    private void changeNumberOfGuests(int bookingID){
+        try{
+            System.out.println("Enter total guests for booking: ");
+            int intTotalGuests = input.nextInt();
+            input.nextLine();
+            database.changeNumberOfGuests(intTotalGuests, bookingID);
+
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void changeCustomerInformation(){
         try{
         System.out.println("Please enter customer ID: ");
         int conditionEquals = input.nextInt();
@@ -171,25 +204,25 @@ public class Booking {
                 case "1":
                     System.out.println("Enter new first name: ");
                     String newFirstName = input.nextLine();
-                    database.changeBooking("guest_information", "first_name", newFirstName, "id", conditionEquals);
+                    database.changeCustomerBooking("guest_information", "first_name", newFirstName, "id", conditionEquals);
                     break;
 
                 case "2":
                     System.out.println("Enter new last name: ");
                     String newLastName = input.nextLine();
-                    database.changeBooking("guest_information", "last_name", newLastName, "id", conditionEquals);
+                    database.changeCustomerBooking("guest_information", "last_name", newLastName, "id", conditionEquals);
                     break;
 
                 case "3":
                     System.out.println("Enter new email: ");
                     String newEmail = input.nextLine();
-                    database.changeBooking("guest_information", "email", newEmail, "id", conditionEquals);
+                    database.changeCustomerBooking("guest_information", "email", newEmail, "id", conditionEquals);
                     break;
 
                 case "4":
                     System.out.println("Enter new phone number: ");
                     String newPhoneNumber = input.nextLine();
-                    database.changeBooking("guest_information", "phonenumber", newPhoneNumber, "id", conditionEquals);
+                    database.changeCustomerBooking("guest_information", "phonenumber", newPhoneNumber, "id", conditionEquals);
                     break;
             }
 

@@ -43,7 +43,7 @@ public class Menu {
 
                         // Test purpose only
                     case "3":
-                      booking.changeCustomerInformation();
+
                         break;
 
                     case "0":
