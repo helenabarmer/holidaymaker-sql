@@ -87,12 +87,14 @@ public class DatabaseConnection {
 
     public boolean checkBookingDates(String checkin_date, String checkout_date){
         try {
-            statement = connection.prepareStatement("SELECT * FROM booked_dates\n" +
-                    "WHERE ? NOT BETWEEN booked_dates.checkin_date AND booked_dates.checkout_date\n" +
-                    "AND ? NOT BETWEEN booked_dates.checkin_date AND booked_dates.checkout_date\n" +
+            statement = connection.prepareStatement("SELECT * FROM bookings\n" +
+                    "WHERE ? NOT BETWEEN checkin_date AND checkout_date\n" +
+                    "AND ? NOT BETWEEN checkin_date AND checkout_date\n" +
                     "AND ? BETWEEN '2020-06-01' AND '2020-07-30'\n" +
                     "AND ? BETWEEN '2020-06-02' AND '2020-07-31'\n" +
-                    "AND ? > ?;");
+                    "AND ? > ?\n" +
+                    "OR checkin_date IS NULL\n" +
+                    "OR checkout_date IS NULL;");
 
             statement.setString(1, checkin_date);
             statement.setString(2, checkout_date);
@@ -139,6 +141,8 @@ public class DatabaseConnection {
                     "AND ? BETWEEN '2020-05-31' AND '2020-07-30'\n" +
                     "AND ? BETWEEN '2020-06-02' AND '2020-07-31'\n" +
                     "AND ? > ? \n" +
+                    "OR checkin_date IS NULL\n" +
+                    "OR checkout_date IS NULL\n" +
                     "AND maximum_guests >= ? " +
                     "AND restaurant = ? \n" +
                     "AND kids_club = ? \n" +
@@ -154,6 +158,8 @@ public class DatabaseConnection {
                     "AND ? BETWEEN '2020-05-31' AND '2020-07-30'\n" +
                     "AND ? BETWEEN '2020-06-02' AND '2020-07-31'\n" +
                     "AND ? > ? \n" +
+                    "OR checkin_date IS NULL\n" +
+                    "OR checkout_date IS NULL\n" +
                     "AND maximum_guests >= ? " +
                     "AND restaurant = ? \n" +
                     "AND kids_club = ? \n" +
@@ -170,6 +176,8 @@ public class DatabaseConnection {
                     "AND ? BETWEEN '2020-05-31' AND '2020-07-30'\n" +
                     "AND ? BETWEEN '2020-06-02' AND '2020-07-31'\n" +
                     "AND ? > ? \n" +
+                    "OR checkin_date IS NULL\n" +
+                    "OR checkout_date IS NULL\n" +
                     "AND maximum_guests >= ? " +
                     "AND restaurant = ? \n" +
                     "AND kids_club = ? \n" +
@@ -282,13 +290,15 @@ public class DatabaseConnection {
         return ID.toString();
     }
 
-    public String addAdditionalChoices(String meal_choice, String additional_bed){
+    public String addAdditionalChoices(String meal_choice, String additional_bed, int room_id, int booked_dates_id){
         StringBuilder ID = new StringBuilder();
         try {
             // Step 1: Insert new data
-            statement = connection.prepareStatement("INSERT INTO additional_choices(meal_choice, additional_bed) VALUES(?, ?);");
-            statement.setString(1, meal_choice);
-            statement.setString(2, additional_bed);
+            statement = connection.prepareStatement("INSERT INTO additional_choices(room_id, booked_dates_id, meal_choice, additional_bed) VALUES(?, ?, ?, ?);");
+            statement.setInt(1, room_id);
+            statement.setInt(2, booked_dates_id);
+            statement.setString(3, meal_choice);
+            statement.setString(4, additional_bed);
             System.out.println("STEP 1:  choices added. ");
             try {
                 statement.executeUpdate();
@@ -299,9 +309,13 @@ public class DatabaseConnection {
             // Step 2: Selecting and retrieving ID from INSERT query above
             statement = connection.prepareStatement("SELECT choice_ID FROM additional_choices \n" +
                     "WHERE meal_choice = ?\n" +
-                    "AND additional_bed = ?; ");
+                    "AND additional_bed = ?\n" +
+                    "AND room_id = ?\n" +
+                    "AND booked_dates_id = ?; ");
             statement.setString(1, meal_choice);
             statement.setString(2, additional_bed);
+            statement.setInt(3, room_id);
+            statement.setInt(4, booked_dates_id);
 
             try {
                 resultSet = statement.executeQuery();

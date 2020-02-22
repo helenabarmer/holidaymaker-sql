@@ -70,12 +70,14 @@ public class Booking {
                         if (choice.equalsIgnoreCase("Y")) {
                             System.out.println("Please enter the room ID you would like to book: ");
                             int roomID = input.nextInt();
+                            System.out.println("Room ID " + roomID);
                             input.nextLine();
 
                             // Add check-in and checkout dates to database
                             // Return booked dates ID for bookings table
                             String bookedDatesID = database.addBookingRoom(roomID, checkInDate, checkOutDate);
                             int datesID = Integer.parseInt(bookedDatesID);
+                            System.out.println("Date ID " + datesID);
 
                             // Meal choice
                             System.out.println("Please enter additional meal choices [half board]/[full board]/[none]");
@@ -86,12 +88,13 @@ public class Booking {
                             String additionalBed = input.nextLine();
 
                             // Add additional choices to database
-                            String additionalChoice = database.addAdditionalChoices(mealChoice, additionalBed);
+                            String additionalChoice = database.addAdditionalChoices(mealChoice, additionalBed, roomID, datesID);
                             int choiceID = Integer.parseInt(additionalChoice);
                             System.out.println("Choice ID = " + choiceID);
 
                             // Add if they have been a guest before to book with this ID?
                             // Register new guest and get guest ID
+
 
                             /*if(addCustomerToBooking()){
                                 int guestID = addExistingCustomer();
@@ -103,6 +106,7 @@ public class Booking {
                             }*/
 
                             int guestID = registerNewCustomer();
+                            System.out.println(" Guest ID " + guestID);
                             // Finish booking and add to booking table in database
                             database.finishBooking(guestID, roomID, choiceID, datesID, numberOfGuests);
                             break;
