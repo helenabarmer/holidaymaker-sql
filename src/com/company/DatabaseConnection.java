@@ -664,9 +664,7 @@ public class DatabaseConnection {
             statement = connection.prepareStatement("SELECT room_id, first_name, last_name, city, hotel_name, room_type, checkin_date, checkout_date, total_amount FROM pay_total\n" +
                     "WHERE room_id = ?\n" +
                     "AND booked_dates_id = ?\n" +
-                    "AND guests_id = ?\n" +
-                    "AND checkin_date = ?\n" +
-                    "AND checkout_date = ?;");
+                    "AND guests_id = ?;");
 
             statement.setInt(1, room_id);
             statement.setInt(2, booked_dates_id);
@@ -674,7 +672,7 @@ public class DatabaseConnection {
 
             try {
                 resultSet = statement.executeQuery();
-                while (resultSet.next()) {
+                if (resultSet.next()) {
                     String roomInformation =
                             "*************************" + "\n" +
                                     "ROOM ID: " + resultSet.getInt("room_id") + "\n" +
