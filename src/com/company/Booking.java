@@ -123,7 +123,6 @@ public class Booking {
 
     public void changeBooking(){
         try{
-            String choice;
             System.out.println("Add room ID: ");
             int bookingID = input.nextInt();
             input.nextLine();
@@ -131,10 +130,8 @@ public class Booking {
             System.out.println("UPDATE: " + "\n" +
                     "[1] Customer information" + "\n" +
                     "[2] Number of guests" + "\n" +
-                    "[3] Check-in and/or checkout date" + "\n" +
-                    "[4] Room" +
-                    "[5] Add meal or additional bed");
-            choice = input.nextLine();
+                    "[3] Check-in and/or checkout date");
+            String choice = input.nextLine();
 
             switch (choice){
                 case "1":
@@ -147,14 +144,6 @@ public class Booking {
 
                 case "3":
                     changeCheckinCheckoutDate();
-                    break;
-
-                case "4":
-                    System.out.println("Not implemented yet. ");
-                    break;
-
-                case "5":
-                    System.out.println("Not implemented yet. ");
                     break;
 
                 default:
@@ -279,7 +268,9 @@ public class Booking {
                     String firstName = input.nextLine();
                     System.out.println("Enter last name: ");
                     String lastName = input.nextLine();
-                    guestID = database.getCustomerID(firstName, lastName);
+                    System.out.println("Enter e-mail: ");
+                    String email = input.nextLine();
+                    guestID = database.getCustomerID(firstName, lastName, email);
                     break;
                 }
             catch (Exception  e) {
@@ -288,11 +279,6 @@ public class Booking {
         }
         return Integer.parseInt(guestID);
         }
-
-
-
-
-
 
     // Filter distance to beach and centre
     private int []distanceSearch(){
@@ -325,7 +311,7 @@ public class Booking {
             String phoneNumber = input.nextLine();
 
             database.addCustomerToDatabase(firstName, lastName, email, phoneNumber);
-            guestID = database.getCustomerID(firstName, lastName);
+            guestID = database.getCustomerID(firstName, lastName, email);
 
         }
         catch (Exception e){
@@ -366,8 +352,6 @@ public class Booking {
         return new boolean[]{rating, price};
     }
 
-
-
     public void cancelBooking(){
         try{
             System.out.println("Enter the booking ID to cancel the booking: ");
@@ -386,7 +370,6 @@ public class Booking {
         }
     }
 
-    // Validate check-in and checkout dates
     // Add reg-ex?
     private String[] checkDates() {
         while (true) {
@@ -398,8 +381,6 @@ public class Booking {
                 if (!database.checkBookingDates(checkInDate, checkOutDate)) {
                     System.out.println("Something went wrong please try again");
                 } else {
-                    System.out.println(checkInDate);
-                    System.out.println(checkOutDate);
                     return new String[] {checkInDate, checkOutDate};
                 }
             } catch (Exception e) {

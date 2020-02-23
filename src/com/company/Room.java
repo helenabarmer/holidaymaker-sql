@@ -8,14 +8,14 @@ public class Room {
     private DatabaseConnection database = new DatabaseConnection();
 
     public Room(){
-
+        addNewRoom();
     }
 
-    public void addNewRoom() {
+    private void addNewRoom() {
         try{
             System.out.println("Enter the destination ID: ");
             int destinationID = input.nextInt();
-
+            input.nextLine();
 
             System.out.println("Add room type (single/double/suite): ");
             String roomType = input.nextLine();

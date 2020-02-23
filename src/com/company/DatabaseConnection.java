@@ -151,7 +151,6 @@ public class DatabaseConnection {
             statement.setString(4, checkin_date);
             try{
                 statement.executeUpdate();
-                System.out.println("Created view. ");
             }
             catch (Exception e){
                 e.printStackTrace();
@@ -202,16 +201,24 @@ public class DatabaseConnection {
 
             String sqlFilterRating = "SELECT * FROM filter_rooms ORDER BY rating DESC;";
 
-            String sqlFilterPrice = "SELECT * FROM filter_rooms GROUP BY price_per_night ORDER BY price_per_night ASC;";
+            String sqlFilterPrice = "SELECT * FROM filter_rooms ORDER BY price_per_night ASC;";
 
 
             if(filterRating){
                 statement = connection.prepareStatement(sqlFilterRating);
-                resultSet = statement.executeQuery();
+                try {
+                    resultSet = statement.executeQuery();
+                } catch (SQLException e) {
+                    System.out.println("Error message: " + "\n" + e.getMessage() + "\n");
+                }
             }
             else if(filterPrice){
                 statement = connection.prepareStatement(sqlFilterPrice);
-                resultSet = statement.executeQuery();
+                try {
+                    resultSet = statement.executeQuery();
+                } catch (SQLException e) {
+                    System.out.println("Error message: " + "\n" + e.getMessage() + "\n");
+                }
             }
             else{
                 statement = connection.prepareStatement(sqlFilterRooms);
@@ -232,21 +239,14 @@ public class DatabaseConnection {
 
                 try {
                     statement.executeUpdate();
-                    System.out.println("Updated view. ");
                 } catch (NullPointerException e) {
                     System.out.println("Error message: " + "\n" + e.getMessage() + "\n");
                 }
             }
 
-            try {
-                resultSet = statement.executeQuery();
-            } catch (SQLException e) {
-                System.out.println("Error message: " + "\n" + e.getMessage() + "\n");
-            }
-
-            if(resultSet.next()){
                 while(resultSet.next()){
                     String filterRooms =
+                            "*********************************************" + "\n" +
                             "ID: " + resultSet.getInt("id") + "\n" +
                                     "CITY: " + resultSet.getString("city") + "\n" +
                                     "HOTEL NAME: " + resultSet.getString("hotel_name") + "\n" +
@@ -257,13 +257,12 @@ public class DatabaseConnection {
                                     "RATING: " + resultSet.getString("rating") + "\n" +
                                     "BOOKED DATE CHECK-IN: " + resultSet.getString("checkin_date") + "\n" +
                                     "BOOKED DATE CHECKOUT: " + resultSet.getString("checkout_date") + "\n" +
-                                    "*************************" + "\n";
+                                    "*********************************************" + "\n";
 
                     System.out.println(filterRooms);
 
                 }
                 return true;
-            }
         }
         catch(Exception e){
             e.printStackTrace();
@@ -383,16 +382,18 @@ public class DatabaseConnection {
 
     }
 
-    public String getCustomerID(String first_name, String last_name) {
+    public String getCustomerID(String first_name, String last_name, String email) {
         StringBuilder ID = new StringBuilder();
 
         try {
             statement = connection.prepareStatement("SELECT id FROM guest_information\n" +
                     "WHERE first_name = ?\n" +
-                    "AND last_name = ?");
+                    "AND last_name = ?\n" +
+                    "AND email = ?;");
 
             statement.setString(1, first_name);
             statement.setString(2, last_name);
+            statement.setString(3, email);
             resultSet = statement.executeQuery();
 
             while (resultSet.next()){

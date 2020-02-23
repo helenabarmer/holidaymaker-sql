@@ -8,10 +8,10 @@ public class Destination {
 
 
     public Destination(){
-
+        addNewDestination();
     }
 
-    public void addNewDestination(){
+    private void addNewDestination(){
 
         try{
             System.out.println("Enter the city: ");
@@ -54,11 +54,6 @@ public class Destination {
             System.out.println("Enter number of rooms in the hotel: ");
             int numberOfRooms = input.nextInt();
 
-            // Add to database
-            /*database.addDestinationToDatabase(city, hotelName, restaurant, kidsClub,
-                    pool, entertainment, rating, distanceCity,
-                    distanceBeach, numberOfRooms);*/
-
             String destinationID = database.addDestinationToDatabase(city, hotelName, restaurant, kidsClub,
                     pool, entertainment, rating, distanceCity,
                     distanceBeach, numberOfRooms);
@@ -79,7 +74,6 @@ public class Destination {
         catch (Exception e){
             e.printStackTrace();
         }
-
 
     }
 }

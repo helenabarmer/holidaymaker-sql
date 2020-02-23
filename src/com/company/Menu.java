@@ -74,8 +74,7 @@ public class Menu {
                     "[1] Add new booking " + "\n" +
                     "[2] Change booking " + "\n" + // Not implemented
                     "[3] Cancel booking " + "\n" +
-                    "[4] See all destinations " + "\n" +
-                    "[5] Search booking " + "\n" +
+                    "[4] Search booking " + "\n" +
                     "\n" +
                     "[0] Back to admin menu");
             try {
@@ -96,10 +95,6 @@ public class Menu {
                         break;
 
                     case "4":
-                        database.allDestinationsInDatabase();
-                        break;
-
-                    case "5":
                         booking.searchBooking();
                         break;
 
@@ -126,6 +121,7 @@ public class Menu {
         System.out.println("********** ADMIN MENU **********" + "\n" +
                 "[1] Add new destination to database " + "\n" +
                 "[2] Add new room to database " + "\n" +
+                "[3] See all destinations with destination ID " + "\n" +
                 "\n" +
                 "[0] Back to admin menu");
 
@@ -136,13 +132,15 @@ public class Menu {
                 switch (choice){
 
                     case "1":
-                        System.out.println("Add destination");
-                        destination.addNewDestination();
+                        new Destination();
                         break;
 
                     case "2":
-                        System.out.println("Add new room. ");
-                        room.addNewRoom();
+                        new Booking();
+                        break;
+
+                    case "3":
+                        database.allDestinationsInDatabase();
                         break;
 
                     case "0":
