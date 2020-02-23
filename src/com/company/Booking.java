@@ -48,10 +48,7 @@ public class Booking {
                         boolean[] filterSearch = filterByRatingPrice();
                         boolean rating = filterSearch[0];
                         boolean price = filterSearch[1];
-                        System.out.println("RATING " + rating);
-                        System.out.println("PRICE " + price);
-                        //database.filterRoomsInDatabase(checkInDate, checkOutDate, numberOfGuests, restaurant, kidsClub, pool, entertainment, rating, price, distanceBeach, distanceCentre);
-                        // TEST!!!
+
                         database.filterRoomsInDatabase(checkInDate, checkOutDate, numberOfGuests, restaurant, kidsClub, pool, entertainment, rating, price, distanceBeach, distanceCentre);
                     }
 
@@ -88,14 +85,14 @@ public class Booking {
                                 database.finishBooking(guestID, roomID, choiceID, datesID, numberOfGuests);
                                 System.out.println("Booking successfully added." + "\n" +
                                         "Booking ID: " +guestID + "\n");
-                                database.getTotalPrice(roomID, checkInDate, checkOutDate);
+                                database.getTotalPrice(roomID, datesID, checkInDate, checkOutDate);
                             }
                             else{
                                 int guestID = registerNewCustomer();
                                 database.finishBooking(guestID, roomID, choiceID, datesID, numberOfGuests);
                                 System.out.println("Booking successfully added." + "\n" +
                                         "Booking ID: " +guestID + "\n");
-                                database.getTotalPrice(roomID, checkInDate, checkOutDate);
+                                database.getTotalPrice(roomID, datesID, checkInDate, checkOutDate);
                             }
 
                             break;

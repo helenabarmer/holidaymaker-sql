@@ -225,7 +225,7 @@ public class DatabaseConnection {
                 } catch (NullPointerException e) {
                     System.out.println("Error message: " + "\n" + e.getMessage() + "\n");
                 }
-            }
+
 
                 String query = "SELECT * FROM filter_rooms\n" +
                         "WHERE maximum_guests >= ? \n" +
@@ -245,33 +245,40 @@ public class DatabaseConnection {
                 statement.setBoolean(5, entertainment);
                 statement.setInt(6, distance_beach);
                 statement.setInt(7, distance_centre);
-
+            }
                 try {
                     resultSet = statement.executeQuery();
+                    if(resultSet.next()){
+                        while(resultSet.next()){
+                            String filterRooms =
+                                    "*********************************************" + "\n" +
+                                            "ID: " + resultSet.getInt("id") + "\n" +
+                                            "CITY: " + resultSet.getString("city") + "\n" +
+                                            "HOTEL NAME: " + resultSet.getString("hotel_name") + "\n" +
+                                            "ROOM TYPE: " + resultSet.getString("room_type") + "\n" +
+                                            "PRICE: " + resultSet.getString("price_per_night") + "\n" +
+                                            "DISTANCE CENTRE: " + resultSet.getInt("distance_centre") + "\n" +
+                                            "DISTANCE BEACH: " + resultSet.getInt("distance_beach") + "\n" +
+                                            "RATING: " + resultSet.getString("rating") + "\n" +
+                                            "BOOKED DATE CHECK-IN: " + resultSet.getString("checkin_date") + "\n" +
+                                            "BOOKED DATE CHECKOUT: " + resultSet.getString("checkout_date") + "\n" +
+                                            "*********************************************" + "\n";
+
+                            System.out.println(filterRooms);
+                        }
+                        return true;
+                    }
+
+
+
+
+
+
                 } catch (SQLException e) {
                     System.out.println("Error message: " + "\n" + e.getMessage() + "\n");
                 }
 
-            if(resultSet.next()){
-                while(resultSet.next()){
-                    String filterRooms =
-                            "*********************************************" + "\n" +
-                                    "ID: " + resultSet.getInt("id") + "\n" +
-                                    "CITY: " + resultSet.getString("city") + "\n" +
-                                    "HOTEL NAME: " + resultSet.getString("hotel_name") + "\n" +
-                                    "ROOM TYPE: " + resultSet.getString("room_type") + "\n" +
-                                    "PRICE: " + resultSet.getString("price_per_night") + "\n" +
-                                    "DISTANCE CENTRE: " + resultSet.getInt("distance_centre") + "\n" +
-                                    "DISTANCE BEACH: " + resultSet.getInt("distance_beach") + "\n" +
-                                    "RATING: " + resultSet.getString("rating") + "\n" +
-                                    "BOOKED DATE CHECK-IN: " + resultSet.getString("checkin_date") + "\n" +
-                                    "BOOKED DATE CHECKOUT: " + resultSet.getString("checkout_date") + "\n" +
-                                    "*********************************************" + "\n";
 
-                    System.out.println(filterRooms);
-                }
-                return true;
-            }
 
         }
         catch(Exception e){
@@ -618,41 +625,43 @@ public class DatabaseConnection {
 
     }
 
-    public void getTotalPrice(int room_id, String checkin_date, String checkout_date){
+    public void getTotalPrice(int room_id, int booked_ID, String checkin_date, String checkout_date){
         try {
-            statement = connection.prepareStatement("SELECT room_id, first_name, last_name, city, hotel_name, room_type, checkin_date, checkout_date, total_amount FROM total_amount\n" +
+            statement = connection.prepareStatement("SELECT room_id, first_name, last_name, city, hotel_name, room_type, checkin_date, checkout_date, total_amount FROM pay_total\n" +
                     "WHERE room_id = ?\n" +
+                    "AND booked_ID = ?\n" +
                     "AND checkin_date = ?\n" +
                     "AND checkout_date = ?;");
 
             statement.setInt(1, room_id);
-            statement.setString(2, checkin_date);
-            statement.setString(3, checkout_date);
+            statement.setInt(2, booked_ID);
+            statement.setString(3, checkin_date);
+            statement.setString(4, checkout_date);
 
             try {
                 resultSet = statement.executeQuery();
+                if (resultSet.next()) {
+                    String roomInformation =
+                            "*************************" + "\n" +
+                                    "ROOM ID: " + resultSet.getInt("room_id") + "\n" +
+                                    "FIRST NAME: " + resultSet.getString("first_name") + "\n" +
+                                    "LAST NAME: " + resultSet.getString("last_name") + "\n" +
+                                    "HOTEL: " + resultSet.getString("hotel_name") + "\n" +
+                                    "CHECK-IN DATE: " + resultSet.getString("checkin_date") + "\n" +
+                                    "CHECKOUT DATE: " + resultSet.getString("checkout_date") + "\n" +
+                                    "TOTAL AMOUNT TO PAY: " + resultSet.getInt("total_amount") + "\n" +
+                                    "*************************" + "\n";
+                    System.out.println(roomInformation);
+                }
             } catch (SQLException e) {
                 System.out.println("Error message: " + "\n" + e.getMessage() + "\n");
             }
 
-            while (resultSet.next()) {
-                String roomInformation =
-                        "*************************" + "\n" +
-                                "ROOM ID: " + resultSet.getInt("room_id") + "\n" +
-                                "FIRST NAME: " + resultSet.getString("first_name") + "\n" +
-                                "LAST NAME: " + resultSet.getString("last_name") + "\n" +
-                                "HOTEL: " + resultSet.getString("hotel_name") + "\n" +
-                                "CHECK-IN DATE: " + resultSet.getString("checkin_date") + "\n" +
-                                "CHECKOUT DATE: " + resultSet.getString("checkout_date") + "\n" +
-                                "TOTAL AMOUNT TO PAY: " + resultSet.getInt("total_amount") + "\n" +
-                                "*************************" + "\n";
-                System.out.println(roomInformation);
-            }
+
 
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-
 
     }
 
