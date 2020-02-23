@@ -39,7 +39,6 @@ public class Booking {
                 int distanceCentre = distanceToBeachAndCentre[1];
                 System.out.println("*************************" + "\n");
 
-
                 if (database.filterRoomsInDatabase(checkInDate, checkOutDate, numberOfGuests, restaurant, kidsClub, pool, entertainment, false, false, distanceBeach, distanceCentre)) {
                     System.out.println("Would you like to filter this search by rating or price? [Y]/[N]");
                     String filter = input.nextLine();
@@ -49,7 +48,12 @@ public class Booking {
                         boolean[] filterSearch = filterByRatingPrice();
                         boolean rating = filterSearch[0];
                         boolean price = filterSearch[1];
+                        System.out.println("RATING " + rating);
+                        System.out.println("PRICE " + price);
+                        //database.filterRoomsInDatabase(checkInDate, checkOutDate, numberOfGuests, restaurant, kidsClub, pool, entertainment, rating, price, distanceBeach, distanceCentre);
+                        // TEST!!!
                         database.filterRoomsInDatabase(checkInDate, checkOutDate, numberOfGuests, restaurant, kidsClub, pool, entertainment, rating, price, distanceBeach, distanceCentre);
+
                     }
 
                         System.out.println("Would you like to proceed the booking? [Y]/[N]");
@@ -97,10 +101,6 @@ public class Booking {
                                         "Booking ID: " +guestID);
                             }
 
-                            //int guestID = registerNewCustomer();
-                            //System.out.println(" Guest ID " + guestID);
-                            // Finish booking and add to booking table in database
-                            //database.finishBooking(guestID, roomID, choiceID, datesID, numberOfGuests);
                             break;
 
                         } else {
@@ -361,6 +361,7 @@ public class Booking {
                 e.printStackTrace();
             }
         }
+        System.out.println("rating" + rating + "price" + price);
         return new boolean[]{rating, price};
     }
 

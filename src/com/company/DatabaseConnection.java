@@ -121,10 +121,9 @@ public class DatabaseConnection {
 
 
     public boolean filterRoomsInDatabase(String checkin_date, String checkout_date, int maximum_guests, boolean restaurant, boolean kids_club, boolean pool, boolean entertainment, boolean filterRating,
-                                  boolean filterPrice, int distance_beach, int distance_centre){
-
+                                   boolean filterPrice, int distance_beach, int distance_centre){
         try {
-            String sqlFilterRooms = "SELECT id, city, hotel_name, rating, distance_beach, distance_centre, room_type, price_per_night, checkin_date, \n" +
+            String sqlFilterRooms = "CREATE OR REPLACE VIEW filter_rooms AS SELECT id, city, hotel_name, rating, distance_beach, distance_centre, room_type, price_per_night, checkin_date, \n" +
                     "checkout_date FROM bookings\n" +
                     "WHERE ? NOT BETWEEN checkin_date AND checkout_date\n" +
                     "AND ? NOT BETWEEN checkin_date AND checkout_date\n" +
@@ -141,66 +140,42 @@ public class DatabaseConnection {
                     "AND distance_beach <= ? \n" +
                     "AND distance_centre <= ?;";
 
-            String sqlFilterRating = "SELECT id, city, hotel_name, rating, distance_centre, distance_beach, room_type, price_per_night, checkin_date, \n" +
-                    "checkout_date FROM bookings\n" +
-                    "WHERE ? NOT BETWEEN checkin_date AND checkout_date\n" +
-                    "AND ? NOT BETWEEN checkin_date AND checkout_date\n" +
-                    "AND ? BETWEEN '2020-06-01' AND '2020-07-30'\n" +
-                    "AND ? BETWEEN '2020-06-02' AND '2020-07-31'\n" +
-                    "AND ? > ? \n" +
-                    "OR checkin_date IS NULL\n" +
-                    "OR checkout_date IS NULL\n" +
-                    "AND maximum_guests >= ? " +
-                    "AND restaurant = ? \n" +
-                    "AND kids_club = ? \n" +
-                    "AND pool = ? \n" +
-                    "AND entertainment = ? \n" +
-                    "AND distance_beach <= ? \n" +
-                    "AND distance_centre <= ? \n" +
-                    "ORDER BY rating DESC;";
+            String sqlFilterRating = "SELECT * FROM filter_rooms ORDER BY rating DESC;";
 
-            String sqlFilterPrice = "SELECT id, city, hotel_name, rating, distance_centre, distance_beach, room_type, price_per_night, checkin_date, \n" +
-                    "checkout_date FROM bookings\n" +
-                    "WHERE ? NOT BETWEEN checkin_date AND checkout_date\n" +
-                    "AND ? NOT BETWEEN checkin_date AND checkout_date\n" +
-                    "AND ? BETWEEN '2020-06-01' AND '2020-07-30'\n" +
-                    "AND ? BETWEEN '2020-06-02' AND '2020-07-31'\n" +
-                    "AND ? > ? \n" +
-                    "OR checkin_date IS NULL\n" +
-                    "OR checkout_date IS NULL\n" +
-                    "AND maximum_guests >= ? " +
-                    "AND restaurant = ? \n" +
-                    "AND kids_club = ? \n" +
-                    "AND pool = ? \n" +
-                    "AND entertainment = ? \n" +
-                    "AND distance_beach <= ? \n" +
-                    "AND distance_centre <= ? \n" +
-                    "ORDER BY price_per_night ASC;";
+            String sqlFilterPrice = "SELECT * FROM filter_rooms ORDER BY price_per_night ASC;";
 
-        if(filterRating){
-            statement = connection.prepareStatement(sqlFilterRating);
-        }
-        else if(filterPrice){
-            statement = connection.prepareStatement(sqlFilterPrice);
-        }
-        else{
-            statement = connection.prepareStatement(sqlFilterRooms);
-        }
 
-            //statement.setString(1, city);
-            statement.setString(1, checkin_date);
-            statement.setString(2, checkout_date);
-            statement.setString(3, checkin_date);
-            statement.setString(4, checkout_date);
-            statement.setString(5, checkout_date);
-            statement.setString(6, checkin_date);
-            statement.setInt(7, maximum_guests);
-            statement.setBoolean(8, restaurant);
-            statement.setBoolean(9, kids_club);
-            statement.setBoolean(10, pool);
-            statement.setBoolean(11, entertainment);
-            statement.setInt(12, distance_beach);
-            statement.setInt(13, distance_centre);
+            if(filterRating){
+                statement = connection.prepareStatement(sqlFilterRating);
+            }
+            else if(filterPrice){
+                statement = connection.prepareStatement(sqlFilterPrice);
+            }
+            else{
+                statement = connection.prepareStatement(sqlFilterRooms);
+
+                //statement.setString(1, city);
+                statement.setString(1, checkin_date);
+                statement.setString(2, checkout_date);
+                statement.setString(3, checkin_date);
+                statement.setString(4, checkout_date);
+                statement.setString(5, checkout_date);
+                statement.setString(6, checkin_date);
+                statement.setInt(7, maximum_guests);
+                statement.setBoolean(8, restaurant);
+                statement.setBoolean(9, kids_club);
+                statement.setBoolean(10, pool);
+                statement.setBoolean(11, entertainment);
+                statement.setInt(12, distance_beach);
+                statement.setInt(13, distance_centre);
+
+                try {
+                    statement.executeUpdate();
+                    System.out.println("Updated view. ");
+                } catch (NullPointerException e) {
+                    System.out.println("Error message: " + "\n" + e.getMessage() + "\n");
+                }
+            }
 
             try {
                 resultSet = statement.executeQuery();
@@ -409,7 +384,7 @@ public class DatabaseConnection {
             while (resultSet.next()) {
                 String roomInformation =
                         "*************************" + "\n" +
-                                "BOOKING ID: " + resultSet.getString("guest_bookings.id") + "\n" +
+                                "BOOKING ID: " + resultSet.getString("id") + "\n" +
                                 "CITY: " + resultSet.getString("city") + "\n" +
                                 "HOTEL NAME: " + resultSet.getString("hotel_name") + "\n" +
                                 "FIRST NAME: " + resultSet.getString("first_name") + "\n" +
@@ -565,6 +540,10 @@ public class DatabaseConnection {
         }
 
     }
+
+
+
+
 
 }
 
