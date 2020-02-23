@@ -5,8 +5,6 @@ import java.util.Scanner;
 public class Menu {
     private Scanner input = new Scanner(System.in);
     private Booking booking = new Booking();
-    private Destination destination = new Destination();
-    private Room room = new Room();
     private DatabaseConnection database = new DatabaseConnection();
 
     public Menu(){

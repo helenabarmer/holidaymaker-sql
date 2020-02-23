@@ -32,6 +32,11 @@ public class Booking {
                 boolean kidsClub = amenities[1];
                 boolean pool = amenities[2];
                 boolean entertainment = amenities[3];
+                System.out.println("Check amentites filter: ");
+                System.out.println(restaurant);
+                System.out.println(kidsClub);
+                System.out.println(pool);
+                System.out.println(entertainment);
 
                 // Filter distance to beach and distance to centre
                 int[] distanceToBeachAndCentre = distanceSearch();
@@ -53,7 +58,6 @@ public class Booking {
                         //database.filterRoomsInDatabase(checkInDate, checkOutDate, numberOfGuests, restaurant, kidsClub, pool, entertainment, rating, price, distanceBeach, distanceCentre);
                         // TEST!!!
                         database.filterRoomsInDatabase(checkInDate, checkOutDate, numberOfGuests, restaurant, kidsClub, pool, entertainment, rating, price, distanceBeach, distanceCentre);
-
                     }
 
                         System.out.println("Would you like to proceed the booking? [Y]/[N]");
@@ -84,21 +88,21 @@ public class Booking {
                             int choiceID = Integer.parseInt(additionalChoice);
                             System.out.println("Choice ID = " + choiceID);
 
-                            // Add if they have been a guest before to book with this ID?
+
                             // Register new guest and get guest ID
-
-
                             if(addCustomerToBooking()){
                                 int guestID = addExistingCustomer();
                                 database.finishBooking(guestID, roomID, choiceID, datesID, numberOfGuests);
                                 System.out.println("Booking successfully added." + "\n" +
-                                        "Booking ID: " +guestID);
+                                        "Booking ID: " +guestID + "\n");
+                                database.getTotalPrice(roomID, checkInDate, checkOutDate);
                             }
                             else{
                                 int guestID = registerNewCustomer();
                                 database.finishBooking(guestID, roomID, choiceID, datesID, numberOfGuests);
                                 System.out.println("Booking successfully added." + "\n" +
-                                        "Booking ID: " +guestID);
+                                        "Booking ID: " +guestID + "\n");
+                                database.getTotalPrice(roomID, checkInDate, checkOutDate);
                             }
 
                             break;
@@ -437,6 +441,11 @@ public class Booking {
                     break;
             }
         }
+        System.out.println("Restaurant " + restaurant);
+        System.out.println("Kids " + kidsClub);
+        System.out.println("Pool " + pool);
+        System.out.println("entertain " + entertainment);
+
         return new boolean[]{restaurant, kidsClub, pool, entertainment};
     }
 
