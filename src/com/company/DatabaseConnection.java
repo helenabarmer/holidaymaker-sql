@@ -86,37 +86,41 @@ public class DatabaseConnection {
 
     public boolean checkBookingDates(String checkin_date, String checkout_date){
         try {
-            statement = connection.prepareStatement("SELECT * FROM bookings\n" +
+            statement = connection.prepareStatement("CREATE OR REPLACE VIEW check_booking_dates AS SELECT * from bookings WHERE ? > ?\n" +
+                    "AND ? BETWEEN '2020-06-01' AND '2020-07-30'\n" +
+                    "AND ? BETWEEN '2020-06-02' AND '2020-07-31'");
+            statement.setString(1, checkout_date);
+            statement.setString(2, checkin_date);
+            statement.setString(3, checkout_date);
+            statement.setString(4, checkin_date);
+            try{
+                statement.executeUpdate();
+                System.out.println("Created view. ");
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+
+            statement = connection.prepareStatement("SELECT * FROM check_booking_dates\n" +
                     "WHERE ? NOT BETWEEN checkin_date AND checkout_date\n" +
                     "AND ? NOT BETWEEN checkin_date AND checkout_date\n" +
-                    "AND ? BETWEEN '2020-06-01' AND '2020-07-30'\n" +
-                    "AND ? BETWEEN '2020-06-02' AND '2020-07-31'\n" +
-                    "AND ? > ?\n" +
                     "OR checkin_date IS NULL\n" +
                     "OR checkout_date IS NULL;");
 
             statement.setString(1, checkin_date);
             statement.setString(2, checkout_date);
-            statement.setString(3, checkin_date);
-            statement.setString(4, checkout_date);
-            statement.setString(5, checkout_date);
-            statement.setString(6, checkin_date);
 
             try {
                 resultSet = statement.executeQuery();
             } catch (SQLException e) {
                 System.out.println("Error message: " + "\n" + e.getMessage() + "\n");
             }
-
-            if(resultSet.next()){
-                return true;
-            }
+            return resultSet.next();
         }
         catch(Exception e){
             e.printStackTrace();
         }
         return false;
-
     }
 
 
@@ -142,19 +146,20 @@ public class DatabaseConnection {
 
             String sqlFilterRating = "SELECT * FROM filter_rooms ORDER BY rating DESC;";
 
-            String sqlFilterPrice = "SELECT * FROM filter_rooms ORDER BY price_per_night ASC;";
+            String sqlFilterPrice = "SELECT * FROM filter_rooms GROUP BY price_per_night ORDER BY price_per_night ASC;";
 
 
             if(filterRating){
                 statement = connection.prepareStatement(sqlFilterRating);
+                resultSet = statement.executeQuery();
             }
             else if(filterPrice){
                 statement = connection.prepareStatement(sqlFilterPrice);
+                resultSet = statement.executeQuery();
             }
             else{
                 statement = connection.prepareStatement(sqlFilterRooms);
 
-                //statement.setString(1, city);
                 statement.setString(1, checkin_date);
                 statement.setString(2, checkout_date);
                 statement.setString(3, checkin_date);

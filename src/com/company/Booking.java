@@ -387,16 +387,18 @@ public class Booking {
 
     // Validate check-in and checkout dates
     // Add reg-ex?
-    private String[] checkDates() {
+    public String[] checkDates() {
         while (true) {
             try {
-                System.out.println("Please enter check-in date. Format should be YYYY/MM/DD. ");
+                System.out.println("Please enter check-in date. Format should be YYYY-MM-DD. ");
                 String checkInDate = input.nextLine();
-                System.out.println("Please enter check-out date. Format should be YYYY/MM/DD. ");
+                System.out.println("Please enter check-out date. Format should be YYYY-MM-DD. ");
                 String checkOutDate = input.nextLine();
                 if (!database.checkBookingDates(checkInDate, checkOutDate)) {
                     System.out.println("Something went wrong please try again");
                 } else {
+                    System.out.println(checkInDate);
+                    System.out.println(checkOutDate);
                     return new String[] {checkInDate, checkOutDate};
                 }
             } catch (Exception e) {
