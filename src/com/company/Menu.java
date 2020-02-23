@@ -137,6 +137,7 @@ public class Menu {
 
                     case "1":
                         System.out.println("Add destination");
+                        destination.addNewDestination();
                         break;
 
                     case "2":

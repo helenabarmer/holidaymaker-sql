@@ -126,6 +126,7 @@ public class Booking {
             String choice;
             System.out.println("Add room ID: ");
             int bookingID = input.nextInt();
+            input.nextLine();
 
             System.out.println("UPDATE: " + "\n" +
                     "[1] Customer information" + "\n" +
@@ -387,7 +388,7 @@ public class Booking {
 
     // Validate check-in and checkout dates
     // Add reg-ex?
-    public String[] checkDates() {
+    private String[] checkDates() {
         while (true) {
             try {
                 System.out.println("Please enter check-in date. Format should be YYYY-MM-DD. ");
@@ -465,7 +466,9 @@ public class Booking {
             String firstName = input.nextLine();
             System.out.println("Customer last name: ");
             String lastName = input.nextLine();
-            if (!database.searchBookingAndPrint(firstName, lastName)) {
+            System.out.println("Customer email: ");
+            String email = input.nextLine();
+            if (!database.searchBookingAndPrint(firstName, lastName, email)) {
                 System.out.println("Sorry we could not find the name " +firstName+ " " +lastName);
             }
         }

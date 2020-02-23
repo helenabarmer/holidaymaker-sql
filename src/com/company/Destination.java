@@ -55,9 +55,25 @@ public class Destination {
             int numberOfRooms = input.nextInt();
 
             // Add to database
-            database.addDestinationToDatabase(city, hotelName, restaurant, kidsClub,
+            /*database.addDestinationToDatabase(city, hotelName, restaurant, kidsClub,
+                    pool, entertainment, rating, distanceCity,
+                    distanceBeach, numberOfRooms);*/
+
+            String destinationID = database.addDestinationToDatabase(city, hotelName, restaurant, kidsClub,
                     pool, entertainment, rating, distanceCity,
                     distanceBeach, numberOfRooms);
+            int ID = Integer.parseInt(destinationID);
+
+            System.out.println("Enter price half board: ");
+            int halfBoard = input.nextInt();
+            System.out.println("Enter price full board: ");
+            int fullBoard = input.nextInt();
+            System.out.println("Enter price additional bed: ");
+            int bed = input.nextInt();
+            input.nextLine();
+
+            // Add prices to additional choices
+            database.addAdditionalChoicesPrice(ID, halfBoard, fullBoard, bed);
 
         }
         catch (Exception e){

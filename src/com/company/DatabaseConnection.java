@@ -25,9 +25,12 @@ public class DatabaseConnection {
         }
     }
 
-    public void addDestinationToDatabase(String city, String hotelName, boolean restaurant, boolean kidsClub,
+    public String addDestinationToDatabase(String city, String hotelName, boolean restaurant, boolean kidsClub,
                                          boolean pool, boolean entertainment, String rating, String distanceCity,
                                          String distanceBeach, int numberOfRooms) {
+        StringBuilder ID = new StringBuilder();
+
+
         try {
             statement = connection.prepareStatement("INSERT INTO destinations (city, hotel_name, restaurant, kids_club, pool, entertainment, rating, distance_centre, distance_beach, number_of_rooms) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             statement.setString(1, city);
@@ -40,6 +43,59 @@ public class DatabaseConnection {
             statement.setString(8, distanceCity);
             statement.setString(9, distanceBeach);
             statement.setInt(10, numberOfRooms);
+            try {
+                statement.executeUpdate();
+            } catch (SQLException e) {
+                System.out.println("Error message: " + "\n" + e.getMessage() + "\n");
+            }
+
+            statement = connection.prepareStatement("SELECT id FROM destinations \n" +
+                    "WHERE city = ?\n" +
+                    "AND hotel_name = ?\n" +
+                    "AND restaurant = ?\n" +
+                    "AND kids_club = ?\n" +
+                    "AND pool = ?\n" +
+                    "AND entertainment = ?\n" +
+                    "AND rating = ?\n" +
+                    "AND distance_centre = ?\n" +
+                    "AND distance_beach = ?\n" +
+                    "AND number_of_rooms = ?; ");
+            statement.setString(1, city);
+            statement.setString(2, hotelName);
+            statement.setBoolean(3, restaurant);
+            statement.setBoolean(4, kidsClub);
+            statement.setBoolean(5, pool);
+            statement.setBoolean(6, entertainment);
+            statement.setString(7, rating);
+            statement.setString(8, distanceCity);
+            statement.setString(9, distanceBeach);
+            statement.setInt(10, numberOfRooms);
+
+            try {
+                resultSet = statement.executeQuery();
+            } catch (SQLException e) {
+                System.out.println("Error message: " + "\n" + e.getMessage() + "\n");
+            }
+            while (resultSet.next()){
+                ID.append(resultSet.getString("id"));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ID.toString();
+    }
+
+
+    public void addAdditionalChoicesPrice(int destination_id, int half_board, int full_board, int additional_bed){
+        try {
+            statement = connection.prepareStatement("INSERT INTO additional_prices\n" +
+                    "SET destination_id = ?, half_board = ?, full_board = ?, additional_bed = ?;\n");
+            statement.setInt(1, destination_id);
+            statement.setInt(2, half_board);
+            statement.setInt(3, full_board);
+            statement.setInt(4, additional_bed);
+
             statement.executeUpdate();
 
         } catch (Exception e) {
@@ -371,14 +427,16 @@ public class DatabaseConnection {
     }
 
     // Get information from bookings view instead?
-    public boolean searchBookingAndPrint(String first_name, String last_name) {
+    public boolean searchBookingAndPrint(String first_name, String last_name, String email) {
         try {
             statement = connection.prepareStatement("SELECT id, first_name, last_name, city, hotel_name, checkin_date, checkout_date FROM all_booked_guests\n" +
                     "WHERE first_name = ?\n" +
-                    "AND last_name = ?;");
+                    "AND last_name = ?\n" +
+                    "AND email = ?;");
 
             statement.setString(1, first_name);
             statement.setString(2, last_name);
+            statement.setString(3, email);
 
             try {
                 resultSet = statement.executeQuery();
