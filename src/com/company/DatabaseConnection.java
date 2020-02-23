@@ -183,8 +183,25 @@ public class DatabaseConnection {
                                    boolean filterPrice, int distance_beach, int distance_centre){
         try {
             if(filterRating){
-                String sqlFilterRating = "SELECT * FROM filter_rooms ORDER BY rating DESC;";
+                String sqlFilterRating = "SELECT * FROM filter_rooms\n" +
+                        "WHERE maximum_guests >= ? \n" +
+                        "AND restaurant = ? \n" +
+                        "AND kids_club = ?\n" +
+                        "AND pool = ? \n" +
+                        "AND entertainment = ? \n" +
+                        "AND distance_beach <= ? \n" +
+                        "AND distance_centre <= ? \n" +
+                        "ORDER BY rating DESC;";
+
                 statement = connection.prepareStatement(sqlFilterRating);
+
+                statement.setInt(1, maximum_guests);
+                statement.setBoolean(2, restaurant);
+                statement.setBoolean(3, kids_club);
+                statement.setBoolean(4, pool);
+                statement.setBoolean(5, entertainment);
+                statement.setInt(6, distance_beach);
+                statement.setInt(7, distance_centre);
                 try {
                     resultSet = statement.executeQuery();
                 } catch (SQLException e) {
@@ -192,8 +209,25 @@ public class DatabaseConnection {
                 }
             }
             else if(filterPrice){
-                String sqlFilterPrice = "SELECT * FROM filter_rooms ORDER BY price_per_night ASC;";
+                String sqlFilterPrice = "SELECT * FROM filter_rooms\n" +
+                        "WHERE maximum_guests >= ? \n" +
+                        "AND restaurant = ? \n" +
+                        "AND kids_club = ?\n" +
+                        "AND pool = ? \n" +
+                        "AND entertainment = ? \n" +
+                        "AND distance_beach <= ? \n" +
+                        "AND distance_centre <= ? \n" +
+                        "ORDER BY price_per_night ASC;";
+
                 statement = connection.prepareStatement(sqlFilterPrice);
+
+                statement.setInt(1, maximum_guests);
+                statement.setBoolean(2, restaurant);
+                statement.setBoolean(3, kids_club);
+                statement.setBoolean(4, pool);
+                statement.setBoolean(5, entertainment);
+                statement.setInt(6, distance_beach);
+                statement.setInt(7, distance_centre);
                 try {
                     resultSet = statement.executeQuery();
                 } catch (SQLException e) {
@@ -625,22 +659,22 @@ public class DatabaseConnection {
 
     }
 
-    public void getTotalPrice(int room_id, int booked_ID, String checkin_date, String checkout_date){
+    public void getTotalPrice(int room_id, int booked_dates_id, int guests_id){
         try {
             statement = connection.prepareStatement("SELECT room_id, first_name, last_name, city, hotel_name, room_type, checkin_date, checkout_date, total_amount FROM pay_total\n" +
                     "WHERE room_id = ?\n" +
-                    "AND booked_ID = ?\n" +
+                    "AND booked_dates_id = ?\n" +
+                    "AND guests_id = ?\n" +
                     "AND checkin_date = ?\n" +
                     "AND checkout_date = ?;");
 
             statement.setInt(1, room_id);
-            statement.setInt(2, booked_ID);
-            statement.setString(3, checkin_date);
-            statement.setString(4, checkout_date);
+            statement.setInt(2, booked_dates_id);
+            statement.setInt(3, guests_id);
 
             try {
                 resultSet = statement.executeQuery();
-                if (resultSet.next()) {
+                while (resultSet.next()) {
                     String roomInformation =
                             "*************************" + "\n" +
                                     "ROOM ID: " + resultSet.getInt("room_id") + "\n" +

@@ -85,14 +85,14 @@ public class Booking {
                                 database.finishBooking(guestID, roomID, choiceID, datesID, numberOfGuests);
                                 System.out.println("Booking successfully added." + "\n" +
                                         "Booking ID: " +guestID + "\n");
-                                database.getTotalPrice(roomID, datesID, checkInDate, checkOutDate);
+                                database.getTotalPrice(roomID, datesID, guestID);
                             }
                             else{
                                 int guestID = registerNewCustomer();
                                 database.finishBooking(guestID, roomID, choiceID, datesID, numberOfGuests);
                                 System.out.println("Booking successfully added." + "\n" +
                                         "Booking ID: " +guestID + "\n");
-                                database.getTotalPrice(roomID, datesID, checkInDate, checkOutDate);
+                                database.getTotalPrice(roomID, datesID, guestID);
                             }
 
                             break;
@@ -342,7 +342,6 @@ public class Booking {
                 e.printStackTrace();
             }
         }
-        System.out.println("rating" + rating + "price" + price);
         return new boolean[]{rating, price};
     }
 

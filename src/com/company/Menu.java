@@ -18,7 +18,6 @@ public class Menu {
         System.out.println("********** MAIN MENU **********" + "\n" +
                 "[1] Booking menu " + "\n" +
                 "[2] Admin menu [Add room/destination] " + "\n" + // Change, find booking, delete booking
-                "[3] TEST STUFF HERE" + "\n" +
                 "\n" +
                 "[0] Logout");
 
@@ -37,12 +36,6 @@ public class Menu {
                         adminMenu();
                         break;
 
-                        // Test purpose only
-                    case "3":
-                        System.out.println();
-
-                        break;
-
                     case "0":
                         System.exit(0);
                         break;
@@ -52,7 +45,6 @@ public class Menu {
 
                 }
             }
-
 
         catch(Exception e){
             System.out.println(e.getMessage());
